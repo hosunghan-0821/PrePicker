@@ -1,17 +1,19 @@
-package co.kr.demo.service.order.dto;
+package co.kr.demo.service.dto.viewDto;
 
-
+import co.kr.demo.domain.model.Product;
+import co.kr.demo.service.dto.domainDto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
+
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductInfoDto {
+public class ProductViewDto {
 
     @JsonProperty("id")
     private Long productId;
@@ -23,9 +25,9 @@ public class ProductInfoDto {
     private String productCode;
 
     @JsonProperty("price")
-    private String productPrice;
+    private Long productPrice;
 
     @JsonProperty("options")
-    private List<OptionDetailDto> optionDetails;
+    private List<OptionViewDto> optionDetails;
 
 }

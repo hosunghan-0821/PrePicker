@@ -1,4 +1,4 @@
-package co.kr.demo.service.order.dto;
+package co.kr.demo.service.dto.domainDto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,7 @@ public class OrderInfoDto {
     public OrderDto orderDto;
 
     @JsonProperty(value="products")
-    public List<ProductInfoDto> productInfoDto;
+    public List<ProductDto> productDto;
 
 
 }
