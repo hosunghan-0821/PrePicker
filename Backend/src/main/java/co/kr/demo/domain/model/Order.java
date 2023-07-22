@@ -14,7 +14,7 @@ import java.time.Instant;
 @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Table(name = "tb_order")
-public class Order {
+public class Order extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

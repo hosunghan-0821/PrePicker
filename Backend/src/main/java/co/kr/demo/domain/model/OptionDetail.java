@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Table(name = "tb_option_detail")
-public class OptionDetail {
+public class OptionDetail  extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Table(name = "tb_product_option")
-public class ProductOption {
+public class ProductOption extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

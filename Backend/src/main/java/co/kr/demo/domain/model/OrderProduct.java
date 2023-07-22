@@ -14,7 +14,7 @@ import java.util.List;
 @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
 @Table(name = "tb_order_product")
-public class OrderProduct {
+public class OrderProduct extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
