@@ -20,7 +20,10 @@ public class Product extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String productName;
+    @Enumerated(EnumType.STRING)
     private EMClassification eMClassification;
+
+    @Enumerated(EnumType.STRING)
     private ESClassification eSClassification;
     private String productCode;
     private Long price;
