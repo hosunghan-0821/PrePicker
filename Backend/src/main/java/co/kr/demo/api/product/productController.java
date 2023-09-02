@@ -3,13 +3,16 @@ package co.kr.demo.api.product;
 
 import co.kr.demo.service.dto.ResponseDto;
 import co.kr.demo.service.dto.viewDto.ProductViewDto;
+import co.kr.demo.service.image.ImageUploadService;
 import co.kr.demo.service.product.Interface.IProductFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,6 +21,8 @@ import java.util.List;
 public class productController {
 
     private final IProductFacade productFacade;
+
+    private final ImageUploadService imageUploadService;
 
     @PostMapping("/product")
     public ResponseEntity<ResponseDto<ProductViewDto>> registerProduct(@RequestBody ProductViewDto productViewDto) {
@@ -29,5 +34,10 @@ public class productController {
     public ResponseEntity<ResponseDto<Page<ProductViewDto>>> getProductList(Pageable pageable) {
         final Page<ProductViewDto> productList = productFacade.getProductList(pageable);
         return ResponseEntity.ok(ResponseDto.response(productList));
+    }
+
+    @PostMapping("/test/upload")
+    public void test(@RequestPart(value = "files", required = false) MultipartFile multipartFile) throws IOException {
+        imageUploadService.test(multipartFile);
     }
 }
