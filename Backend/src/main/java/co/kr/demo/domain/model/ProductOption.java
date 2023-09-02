@@ -1,10 +1,7 @@
 package co.kr.demo.domain.model;
 
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +9,8 @@ import javax.persistence.*;
 @Getter
 @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "tb_product_option")
 public class ProductOption extends BaseEntity{
     @Id

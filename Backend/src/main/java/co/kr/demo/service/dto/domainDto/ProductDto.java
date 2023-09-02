@@ -61,4 +61,12 @@ public class ProductDto {
                 .productCode(product.getProductCode())
                 .build();
     }
+
+    public static ProductViewDto productViewDtoByProduct(ProductDto productDto){
+        return ProductViewDto.builder()
+                .productId(productDto.getProductId())
+                .productName(productDto.getProductName())
+                .productCode(productDto.getProductCode())
+                .build();
+    }
 }

@@ -29,7 +29,16 @@ public class OptionDto {
         return OptionDto.builder()
                 .optionId(optionViewDto.getOptionId())
                 .optionName(optionViewDto.getOptionName())
-                .eOptionType(EOptionType.String)
+                .eOptionType(optionViewDto.getEOptionType())
+                .additionalData(optionViewDto.getAdditionalData())
+                .build();
+    }
+
+    public static Option toOption(OptionDto optionDto){
+        return Option.builder()
+                .optionName(optionDto.getOptionName())
+                .eOptionType(optionDto.getEOptionType())
+                .additionalData(optionDto.getAdditionalData())
                 .build();
     }
 

@@ -1,9 +1,8 @@
 package co.kr.demo.service.order;
 
 import co.kr.demo.domain.model.Order;
-import co.kr.demo.repository.OrderRepository;
+import co.kr.demo.repository.order.OrderRepository;
 import co.kr.demo.service.dto.domainDto.OrderDto;
-import co.kr.demo.service.dto.viewDto.OrderViewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
