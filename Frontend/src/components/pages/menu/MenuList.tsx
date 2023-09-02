@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { styled } from 'styled-components';
 import background from '../../../assets/img/background.png';
-import mainImg from '../../../assets/img/mainImg.png';
 
 import { Header } from '../../../styles/StyledComponents';
 
@@ -9,25 +8,11 @@ interface MentColorProps {
     fontcolor?: string; // Define the fontColor prop
 }
 
-const Main = () => {
+const MenuList = () => {
     return (
         <Container>
             <Header color="#5e88b7"> 간편 예약은 "PICKER PENG" </Header>
-            <RemarkButton> 파리바게트 다이아몬드광장점 </RemarkButton>
-            <MentContainer>
-                <FirstMent fontcolor="#C0EDFF">지금&nbsp;</FirstMent>
-                <FirstMent>케이크를 예약</FirstMent>
-                <FirstMent fontcolor="#C0EDFF">하면</FirstMent>
-            </MentContainer>
 
-            <MentContainer>
-                <SecondMent fontcolor="#D63025">커스텀 토퍼</SecondMent>
-                <SecondMent>가 무료!</SecondMent>
-            </MentContainer>
-            <img style={{ paddingTop: '20px' }} alt="mainImg" src={mainImg} width="360px" />
-            <Link to="/menu">
-                <GradientButton> 지금 예약하고 토퍼 받기 </GradientButton>
-            </Link>
             <Link to="https://naver.me/5rZHj3AQ" target="_blank">
                 <Text> &nbsp;매장 정보 확인하기&nbsp;</Text>
             </Link>
@@ -35,7 +20,7 @@ const Main = () => {
     );
 };
 
-export default Main;
+export default MenuList;
 
 const Container = styled.div`
     display: flex;

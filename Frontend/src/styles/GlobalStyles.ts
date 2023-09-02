@@ -27,6 +27,7 @@ const GlobalStyles = createGlobalStyle`
     cursor: default;
   }
 
+
   button {
     border: 0;
     background-color: transparent;
@@ -48,6 +49,28 @@ const GlobalStyles = createGlobalStyle`
     text-decoration: none;
     color: gray;
   }
+
+  @font-face {
+    font-family: 'TmonMonsori';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/TmonMonsori.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+  @font-face {
+	font-family: "Happiness-Sans-Title";
+	src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/Happiness-Sans-Title.woff2")
+		format("woff2");
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+    font-family: 'BMDOHYEON';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMDOHYEON.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 `;
 
 export default GlobalStyles;
