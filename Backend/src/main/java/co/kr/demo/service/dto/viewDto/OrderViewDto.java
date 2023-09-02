@@ -1,9 +1,13 @@
-package co.kr.demo.service.order.dto;
+package co.kr.demo.service.dto.viewDto;
 
 
+import co.kr.demo.domain.model.Order;
+import co.kr.demo.service.dto.domainDto.OrderDto;
+import co.kr.demo.service.dto.domainDto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -11,7 +15,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDto {
+public class OrderViewDto {
 
     @JsonProperty("id")
     private Long orderId;
@@ -22,8 +26,11 @@ public class OrderDto {
     @JsonProperty("clientPhoneNum")
     private String clientPhoneNum;
 
+    @JsonProperty("reservationDate")
+    private Instant reservationDate;
+
     @JsonProperty("products")
-    private List<ProductInfoDto> productsInfo;
+    public List<ProductViewDto> products;
 
 
 }
