@@ -1,4 +1,4 @@
-package co.kr.demo.repository;
+package co.kr.demo.repository.order;
 
 import co.kr.demo.domain.model.OrderProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
