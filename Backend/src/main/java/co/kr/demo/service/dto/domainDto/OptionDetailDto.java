@@ -1,5 +1,6 @@
 package co.kr.demo.service.dto.domainDto;
 
+import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -17,4 +18,14 @@ public class OptionDetailDto {
     private String optionValue;
     @JsonProperty("fee")
     private Long fee;
+
+
+    public static OptionDetailDto toOptionDetailDtoByViewDto(OptionViewDto optionViewDto) {
+
+        return OptionDetailDto
+                .builder()
+                .optionValue(optionViewDto.getOptionValue())
+                .fee(optionViewDto.getFee()).
+                build();
+    }
 }

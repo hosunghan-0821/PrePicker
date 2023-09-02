@@ -23,6 +23,8 @@ public class Option extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String optionName;
+
+    @Enumerated(EnumType.STRING)
     private EOptionType eOptionType;
     private String additionalData;
 

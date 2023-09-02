@@ -1,6 +1,8 @@
 package co.kr.demo.service.dto.domainDto;
 
+import co.kr.demo.domain.model.Option;
 import co.kr.demo.domain.model.enumeration.EOptionType;
+import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -21,6 +23,15 @@ public class OptionDto {
     private EOptionType eOptionType;
     @JsonProperty("additionalData")
     private String additionalData;
+
+
+    public static OptionDto toOptionDtoByViewDto(OptionViewDto optionViewDto){
+        return OptionDto.builder()
+                .optionId(optionViewDto.getOptionId())
+                .optionName(optionViewDto.getOptionName())
+                .eOptionType(EOptionType.String)
+                .build();
+    }
 
 
 }
