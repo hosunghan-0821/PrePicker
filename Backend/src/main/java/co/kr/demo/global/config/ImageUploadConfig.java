@@ -15,8 +15,8 @@ public class ImageUploadConfig {
 
     private final static String DEFAULT_DIRECTORY_PATH="PICKER_PENG/";
 
-    @Bean
-    public IImageUpload imageUpload() {
+    @Bean(value = "S3ImageUploader")
+    public IImageUpload imageUploadWithS3() {
         return new S3ImageUploadImpl(amazonS3Client,DEFAULT_DIRECTORY_PATH);
     }
 }

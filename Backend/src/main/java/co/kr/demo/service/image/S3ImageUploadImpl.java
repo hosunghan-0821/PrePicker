@@ -84,41 +84,4 @@ public class S3ImageUploadImpl implements IImageUpload {
         this.directoryPath = directoryPath;
     }
 
-
-    public void test(MultipartFile multipartFile) throws IOException {
-
-        String fileOriginalFilename = multipartFile.getOriginalFilename();
-        String fileName = fileOriginalFilename.substring(0, multipartFile.getOriginalFilename().lastIndexOf("."));
-        String fileExtension = fileOriginalFilename.substring(multipartFile.getOriginalFilename().lastIndexOf("."));
-        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        File convertFile = new File(System.getProperty("user.dir") + "/" + fileName + "_" + now + fileExtension);
-
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(multipartFile.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        String directoryPath = "test";
-        fileName = directoryPath + "/" + convertFile.getName();
-
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, convertFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        final String uploadImageUrl = amazonS3Client.getUrl(bucket, fileName).toString();
-
-        System.out.println("업로드 경로 : " + uploadImageUrl);
-        if (convertFile.exists()) {
-            if (convertFile.delete()) {
-                System.out.println("file 삭제 성공");
-            } else {
-                System.out.println("file 삭제 실패");
-            }
-        }
-
-
-    }
-
-
 }
