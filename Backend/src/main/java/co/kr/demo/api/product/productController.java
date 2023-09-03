@@ -36,6 +36,12 @@ public class productController {
         return ResponseEntity.ok(ResponseDto.response(productList));
     }
 
+    @GetMapping("/product/{id}")
+    public ResponseEntity<ResponseDto<ProductViewDto>> getProductDetail(@PathVariable Long id) {
+        final ProductViewDto productDetail = productFacade.getProductDetail(id);
+        return ResponseEntity.ok(ResponseDto.response(productDetail));
+    }
+
     @PostMapping("/test/upload")
     public void test(@RequestPart(value = "files", required = false) MultipartFile multipartFile) throws IOException {
         imageUploadService.test(multipartFile);

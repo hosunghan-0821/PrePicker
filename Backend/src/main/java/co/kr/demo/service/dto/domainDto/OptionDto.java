@@ -34,11 +34,28 @@ public class OptionDto {
                 .build();
     }
 
+    public static OptionViewDto toOptionViewDtoByOptionDto(OptionDto optionDto){
+        return OptionViewDto.builder()
+                .optionId(optionDto.getOptionId())
+                .eOptionType(optionDto.getEOptionType())
+                .optionName(optionDto.getOptionName())
+                .build();
+    }
+
     public static Option toOption(OptionDto optionDto){
         return Option.builder()
                 .optionName(optionDto.getOptionName())
                 .eOptionType(optionDto.getEOptionType())
                 .additionalData(optionDto.getAdditionalData())
+                .build();
+    }
+
+    public static OptionDto of(Option option){
+        return OptionDto.builder()
+                .optionId(option.getId())
+                .optionName(option.getOptionName())
+                .eOptionType(option.getEOptionType())
+                .additionalData(option.getAdditionalData())
                 .build();
     }
 

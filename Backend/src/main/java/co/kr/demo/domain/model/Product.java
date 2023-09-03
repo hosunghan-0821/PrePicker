@@ -6,6 +6,7 @@ import co.kr.demo.domain.model.enumeration.ESClassification;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "tb_product")
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +28,6 @@ public class Product extends BaseEntity{
     private ESClassification eSClassification;
     private String productCode;
     private Long price;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductOption> productOptionList;
 }

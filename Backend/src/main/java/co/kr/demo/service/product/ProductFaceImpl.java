@@ -45,5 +45,11 @@ public class ProductFaceImpl implements IProductFacade {
 
     }
 
+    @Override
+    public ProductViewDto getProductDetail(Long id) {
+        final ProductDto productDetail = productService.getProductDetail(id);
+        return ProductDto.productViewDtoByProduct(productDetail);
+    }
+
 
 }

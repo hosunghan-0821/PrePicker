@@ -32,4 +32,8 @@ public class ProductService {
     public Page<ProductDto> getProductList(Pageable pageable) {
         return productRepository.getProductList(pageable);
     }
+
+    public ProductDto getProductDetail(Long id) {
+        return productRepository.findByIdWithFetch(id);
+    }
 }
