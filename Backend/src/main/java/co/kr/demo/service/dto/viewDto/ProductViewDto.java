@@ -5,6 +5,7 @@ import co.kr.demo.service.dto.domainDto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.swing.text.html.ImageView;
 import java.util.List;
 
 
@@ -29,5 +30,8 @@ public class ProductViewDto {
 
     @JsonProperty("options")
     private List<OptionViewDto> optionDetails;
+
+    @JsonProperty("images")
+    private List<ImageViewDto> imageViewDtoList;
 
 }
