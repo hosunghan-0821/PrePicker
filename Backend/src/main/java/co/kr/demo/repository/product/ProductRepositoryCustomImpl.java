@@ -1,8 +1,9 @@
 package co.kr.demo.repository.product;
 
-import co.kr.demo.domain.model.Product;
-import co.kr.demo.domain.model.QProduct;
+import co.kr.demo.domain.model.*;
 import co.kr.demo.repository.product.ProductRepositoryCustom;
+import co.kr.demo.service.dto.domainDto.ImageDto;
+import co.kr.demo.service.dto.domainDto.OptionDto;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import co.kr.demo.service.dto.viewDto.ProductViewDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -12,7 +13,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static co.kr.demo.domain.model.QProduct.product;
@@ -32,12 +35,29 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
+
         int totalCounts = jpaQueryFactory.selectFrom(product)
                 .orderBy(product.id.desc()).fetch().size();
 
-        List<ProductDto> productViewDtoList = productList.stream()
+        List<ProductDto> productDtoList = productList.stream()
                 .map(ProductDto::of)
                 .collect(Collectors.toList());
-        return new PageImpl<>(productViewDtoList,pageable,totalCounts);
+
+        return new PageImpl<>(productDtoList, pageable, totalCounts);
+    }
+
+    @Override
+    public ProductDto findByIdWithFetch(Long id) {
+
+        final Product getProduct = Optional.ofNullable(jpaQueryFactory.selectFrom(product)
+                .where(product.id.eq(id)).fetchOne()).orElseThrow(() -> new RuntimeException("오류"));
+
+        final ProductDto productDto = ProductDto.of(getProduct);
+        
+        for(ProductOption productOption: getProduct.getProductOptionList()){
+            final Option option = productOption.getOption();
+            productDto.getOptionDtoList().add(OptionDto.of(option));
+        }
+        return productDto;
     }
 }

@@ -3,8 +3,11 @@ package co.kr.demo.service.dto.domainDto;
 
 import co.kr.demo.domain.model.Product;
 import co.kr.demo.service.dto.viewDto.ProductViewDto;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
@@ -13,17 +16,19 @@ import lombok.*;
 @AllArgsConstructor
 public class ProductDto {
 
-    @JsonProperty("id")
     private Long productId;
 
-    @JsonProperty("name")
     private String productName;
 
-    @JsonProperty("code")
+
     private String productCode;
 
-    @JsonProperty("price")
+
     private Long productPrice;
+
+    private List<OptionDto> optionDtoList;
+
+    private List<ImageDto> imageDtoList;
 
 
     public static Product toProductByViewDto(ProductViewDto productViewDto) {
@@ -53,20 +58,39 @@ public class ProductDto {
                 .build();
     }
 
-    public static ProductDto of(Product product){
+    public static ProductDto of(Product product) {
+        if(product.getImageList()==null){
+            return ProductDto.builder()
+                    .productId(product.getId())
+                    .productPrice(product.getPrice())
+                    .productName(product.getProductName())
+                    .productCode(product.getProductCode())
+                    .optionDtoList(new ArrayList<>())
+                    .imageDtoList(new ArrayList<>())
+                    .build();
+        }
         return ProductDto.builder()
                 .productId(product.getId())
                 .productPrice(product.getPrice())
                 .productName(product.getProductName())
                 .productCode(product.getProductCode())
+                .optionDtoList(new ArrayList<>())
+                .imageDtoList(product.getImageList().stream().map(ImageDto::toImageDtoByImage).collect(Collectors.toList()))
+                .build();
+
+    }
+
+    public static ProductViewDto productViewDtoByProductDto(ProductDto productDto) {
+        return ProductViewDto.builder()
+                .productId(productDto.getProductId())
+                .productPrice(productDto.getProductPrice())
+                .productName(productDto.getProductName())
+                .productCode(productDto.getProductCode())
+                .optionDetails(productDto.getOptionDtoList().stream().map(OptionDto::toOptionViewDtoByOptionDto).collect(Collectors.toList()))
+                .imageViewDtoList(productDto.getImageDtoList().stream().map(ImageDto::toImageViewDtoByImageDto).collect(Collectors.toList()))
                 .build();
     }
 
-    public static ProductViewDto productViewDtoByProduct(ProductDto productDto){
-        return ProductViewDto.builder()
-                .productId(productDto.getProductId())
-                .productName(productDto.getProductName())
-                .productCode(productDto.getProductCode())
-                .build();
-    }
+
+
 }

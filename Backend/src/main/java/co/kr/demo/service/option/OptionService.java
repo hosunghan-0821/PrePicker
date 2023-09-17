@@ -34,6 +34,12 @@ public class OptionService {
                 .product(savedProduct)
                 .build();
         productOptionRepository.save(productOption);
+    }
+
+
+    public void updateOption(OptionDto optionDto) {
+        final Option option = optionRepository.findById(optionDto.getOptionId()).orElseThrow(RuntimeException::new);
+        option.update(optionDto);
 
     }
 }
