@@ -37,5 +37,11 @@ public class productController {
         return ResponseEntity.ok(ResponseDto.response(productDetail));
     }
 
+    @PutMapping("/product/{id}")
+    public ResponseEntity<ResponseEntity<ProductViewDto>> updateProductDetail(@PathVariable Long id){
+
+        return null;
+    }
+
 
 }

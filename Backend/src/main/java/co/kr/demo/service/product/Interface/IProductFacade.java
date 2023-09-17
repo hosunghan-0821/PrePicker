@@ -13,4 +13,6 @@ public interface IProductFacade {
     Page<ProductViewDto> getProductList(Pageable pageable);
 
     ProductViewDto getProductDetail(Long id);
+
+    ProductViewDto updateProductDetail(ProductViewDto productViewDto);
 }

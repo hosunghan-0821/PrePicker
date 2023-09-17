@@ -2,6 +2,7 @@ package co.kr.demo.domain.model;
 
 
 import co.kr.demo.domain.model.enumeration.EOptionType;
+import co.kr.demo.service.dto.domainDto.OptionDto;
 import lombok.*;
 import org.graalvm.compiler.options.OptionType;
 ;
@@ -27,4 +28,9 @@ public class Option extends BaseEntity{
     private EOptionType eOptionType;
     private String additionalData;
 
+    public void update(OptionDto optionDto) {
+        this.optionName=optionDto.getOptionName();
+        this.additionalData=optionDto.getAdditionalData();
+        this.eOptionType=optionDto.getEOptionType();
+    }
 }

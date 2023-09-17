@@ -2,6 +2,7 @@ package co.kr.demo.repository.product;
 
 import co.kr.demo.domain.model.*;
 import co.kr.demo.repository.product.ProductRepositoryCustom;
+import co.kr.demo.service.dto.domainDto.ImageDto;
 import co.kr.demo.service.dto.domainDto.OptionDto;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import co.kr.demo.service.dto.viewDto.ProductViewDto;
@@ -34,13 +35,15 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
+
         int totalCounts = jpaQueryFactory.selectFrom(product)
                 .orderBy(product.id.desc()).fetch().size();
 
-        List<ProductDto> productViewDtoList = productList.stream()
+        List<ProductDto> productDtoList = productList.stream()
                 .map(ProductDto::of)
                 .collect(Collectors.toList());
-        return new PageImpl<>(productViewDtoList, pageable, totalCounts);
+
+        return new PageImpl<>(productDtoList, pageable, totalCounts);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                 .where(product.id.eq(id)).fetchOne()).orElseThrow(() -> new RuntimeException("오류"));
 
         final ProductDto productDto = ProductDto.of(getProduct);
-
+        
         for(ProductOption productOption: getProduct.getProductOptionList()){
             final Option option = productOption.getOption();
             productDto.getOptionDtoList().add(OptionDto.of(option));
