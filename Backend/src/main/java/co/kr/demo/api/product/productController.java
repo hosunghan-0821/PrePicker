@@ -17,8 +17,6 @@ public class productController {
 
     private final IProductFacade productFacade;
 
-
-
     @PostMapping("/product")
     public ResponseEntity<ResponseDto<ProductViewDto>> registerProduct(@RequestBody ProductViewDto productViewDto) {
         productFacade.productRegister(productViewDto);
@@ -37,10 +35,13 @@ public class productController {
         return ResponseEntity.ok(ResponseDto.response(productDetail));
     }
 
-    @PutMapping("/product/{id}")
-    public ResponseEntity<ResponseEntity<ProductViewDto>> updateProductDetail(@PathVariable Long id){
+    @PutMapping("/product")
+    public ResponseEntity<ResponseDto<ProductViewDto>> updateProductDetail(@RequestBody ProductViewDto productViewDto){
 
-        return null;
+        assert productViewDto.getProductId() != null;
+
+        productFacade.updateProductDetail(productViewDto);
+        return ResponseEntity.ok(ResponseDto.response(productViewDto));
     }
 
 

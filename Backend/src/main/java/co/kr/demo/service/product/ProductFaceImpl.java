@@ -45,6 +45,7 @@ public class ProductFaceImpl implements IProductFacade {
         for (ImageViewDto imageViewDto : productViewDto.getImageViewDtoList()) {
             imageService.saveImage(ImageDto.toImageDtoByViewDto(imageViewDto), productDto);
         }
+
     }
 
     @Override
@@ -65,21 +66,26 @@ public class ProductFaceImpl implements IProductFacade {
     }
 
     @Override
-    public ProductViewDto updateProductDetail(ProductViewDto productViewDto) {
+    @Transactional
+    public void updateProductDetail(ProductViewDto productViewDto) {
         //1. 상품 기본정보 변경
         final ProductDto productDto = ProductDto.toProductDtoByViewDto(productViewDto);
         productService.updateProduct(productDto);
 
-        //2. 기존 Option 내용 업데이트
-        final List<OptionDto> optionDtoList = productViewDto.getOptionDetails().stream().map(OptionDto::toOptionDtoByViewDto).collect(Collectors.toList());
-        for (OptionDto optionDto : optionDtoList) {
-            optionService.updateOption(optionDto);
+        //2. 기존 Option 제거 후 새로 Insert
+        optionService.deleteProductOption(productDto);
+
+        for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
+            optionService.saveOption(OptionDto.toOptionDtoByViewDto(optionViewDto), productDto);
         }
 
-
         //3. 기존 이미지 내용 지우고, 새로운 이미지 추가
+       imageService.deleteImage(productDto);
 
-        return null;
+        for (ImageViewDto imageViewDto : productViewDto.getImageViewDtoList()) {
+            imageService.saveImage(ImageDto.toImageDtoByViewDto(imageViewDto), productDto);
+        }
+
     }
 
 

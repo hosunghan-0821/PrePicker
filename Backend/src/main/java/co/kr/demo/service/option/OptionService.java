@@ -11,6 +11,10 @@ import co.kr.demo.service.dto.domainDto.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class OptionService {
@@ -35,11 +39,12 @@ public class OptionService {
                 .build();
         productOptionRepository.save(productOption);
     }
+    public void deleteProductOption(ProductDto productDto) {
 
-
-    public void updateOption(OptionDto optionDto) {
-        final Option option = optionRepository.findById(optionDto.getOptionId()).orElseThrow(RuntimeException::new);
-        option.update(optionDto);
+        final List<ProductOption> productOptionList = productOptionRepository.findAllByProduct(Product.builder().id(productDto.getProductId()).build());
+        final List<Option> optionList = productOptionList.stream().map(ProductOption::getOption).collect(Collectors.toList());
+        productOptionRepository.deleteAllInBatch(productOptionList);
+        optionRepository.deleteAllInBatch(optionList);
 
     }
 }

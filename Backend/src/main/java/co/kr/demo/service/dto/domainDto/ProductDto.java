@@ -59,7 +59,7 @@ public class ProductDto {
     }
 
     public static ProductDto of(Product product) {
-        if(product.getImageList()==null){
+        if (product.getImageList() == null) {
             return ProductDto.builder()
                     .productId(product.getId())
                     .productPrice(product.getPrice())
@@ -90,7 +90,6 @@ public class ProductDto {
                 .imageViewDtoList(productDto.getImageDtoList().stream().map(ImageDto::toImageViewDtoByImageDto).collect(Collectors.toList()))
                 .build();
     }
-
 
 
 }
