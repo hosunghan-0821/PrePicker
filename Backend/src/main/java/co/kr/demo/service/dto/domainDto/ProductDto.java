@@ -2,6 +2,7 @@ package co.kr.demo.service.dto.domainDto;
 
 
 import co.kr.demo.domain.model.Product;
+import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import co.kr.demo.service.dto.viewDto.ProductViewDto;
 import lombok.*;
 
@@ -59,24 +60,16 @@ public class ProductDto {
     }
 
     public static ProductDto of(Product product) {
-        if (product.getImageList() == null) {
-            return ProductDto.builder()
-                    .productId(product.getId())
-                    .productPrice(product.getPrice())
-                    .productName(product.getProductName())
-                    .productCode(product.getProductCode())
-                    .optionDtoList(new ArrayList<>())
-                    .imageDtoList(new ArrayList<>())
-                    .build();
-        }
+
         return ProductDto.builder()
                 .productId(product.getId())
                 .productPrice(product.getPrice())
                 .productName(product.getProductName())
                 .productCode(product.getProductCode())
                 .optionDtoList(new ArrayList<>())
-                .imageDtoList(product.getImageList().stream().map(ImageDto::toImageDtoByImage).collect(Collectors.toList()))
+                .imageDtoList(new ArrayList<>())
                 .build();
+
 
     }
 
@@ -88,6 +81,17 @@ public class ProductDto {
                 .productCode(productDto.getProductCode())
                 .optionDetails(productDto.getOptionDtoList().stream().map(OptionDto::toOptionViewDtoByOptionDto).collect(Collectors.toList()))
                 .imageViewDtoList(productDto.getImageDtoList().stream().map(ImageDto::toImageViewDtoByImageDto).collect(Collectors.toList()))
+                .build();
+    }
+
+    public static ProductViewDto productViewDtoByProductDtoAndOptionViewDto(ProductDto productDto,List<OptionViewDto> optionViewDtoList) {
+        return ProductViewDto.builder()
+                .productId(productDto.getProductId())
+                .productPrice(productDto.getProductPrice())
+                .productName(productDto.getProductName())
+                .productCode(productDto.getProductCode())
+                .optionDetails(optionViewDtoList)
+
                 .build();
     }
 

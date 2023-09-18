@@ -11,6 +11,9 @@ import co.kr.demo.service.dto.domainDto.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 @Service
@@ -36,4 +39,12 @@ public class OrderProductService {
 
     }
 
+
+    public List<OrderProductDto> getOrderProduct(OrderDto orderDto) {
+        final List<OrderProduct> orderProductsByOrder = orderProductRepository.findOrderProductsByOrder(Order.builder().id(orderDto.getOrderId()).build());
+
+        return orderProductsByOrder.stream().map(OrderProductDto::of).collect(Collectors.toList());
+
+
+    }
 }
