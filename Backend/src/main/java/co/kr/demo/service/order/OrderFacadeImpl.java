@@ -1,5 +1,7 @@
 package co.kr.demo.service.order;
 
+import co.kr.demo.domain.model.Order;
+import co.kr.demo.repository.order.OrderRepository;
 import co.kr.demo.service.dto.domainDto.*;
 import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import co.kr.demo.service.option.OptionDetailService;
@@ -12,8 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderFacadeImpl implements IOrderFacade {
 
     private final OrderService orderService;
@@ -24,15 +30,15 @@ public class OrderFacadeImpl implements IOrderFacade {
     private final OptionDetailService optionDetailService;
 
     private final OptionService optionService;
+    private final OrderRepository orderRepository;
 
     @Override
-    @Transactional
     public void registerOrder(OrderViewDto orderViewDto) {
 
-        //1. order 기본 정보 저장
+        // 1. order 기본 정보 저장
         final OrderDto savedOrderDto = orderService.saveOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
 
-        //2,3 orderProduct 저장 및 optionDetails 저장
+        // 2,3 orderProduct 저장 및 optionDetails 저장
         for (ProductViewDto productViewDto : orderViewDto.getProducts()) {
 
             final ProductDto productDto = ProductDto.toProductDtoByViewDto(productViewDto);
@@ -44,10 +50,33 @@ public class OrderFacadeImpl implements IOrderFacade {
             for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
 
                 optionService.isExistOption(optionViewDto.getOptionId());
-                optionDetailService.saveOptionDetail(OptionDto.toOptionDtoByViewDto(optionViewDto),orderProductDto,OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
+                optionDetailService.saveOptionDetail(OptionDto.toOptionDtoByViewDto(optionViewDto), orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
 
             }
         }
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderViewDto getOrderDetail(OrderViewDto orderViewDto) {
+
+        //기본주문정보
+        final OrderDto orderDto = orderService.getOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
+
+        //상품정보 + 옵션
+        final List<OrderProductDto> orderProductDtoList = orderProductService.getOrderProduct(orderDto);
+
+        List<ProductViewDto> productViewDtoList = new ArrayList<>();
+        for (OrderProductDto orderProductDto : orderProductDtoList) {
+
+            final List<OptionViewDto> optionDetail = optionDetailService.getOptionDetail(orderProductDto);
+            final ProductViewDto productViewDto = ProductDto.productViewDtoByProductDtoAndOptionViewDto(orderProductDto.getProductDto(), optionDetail);
+            productViewDtoList.add(productViewDto);
+        }
+
+
+        return OrderDto.toOrderViewDtoByData(orderDto, productViewDtoList);
 
     }
 }

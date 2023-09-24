@@ -42,6 +42,17 @@ public class OptionDto {
                 .build();
     }
 
+    public static OptionViewDto toOptionViewDtoByOptionDtoAndOptionDetailDto(OptionDto optionDto,OptionDetailDto optionDetailDto){
+        return OptionViewDto.builder()
+                .optionId(optionDto.getOptionId())
+                .eOptionType(optionDto.getEOptionType())
+                .optionName(optionDto.getOptionName())
+                .optionDetailId(optionDetailDto.getOptionDetailId())
+                .optionValue(optionDetailDto.getOptionValue())
+                .fee(optionDetailDto.getFee())
+                .build();
+    }
+
     public static Option toOption(OptionDto optionDto){
         return Option.builder()
                 .optionName(optionDto.getOptionName())

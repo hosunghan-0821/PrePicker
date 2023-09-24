@@ -19,4 +19,11 @@ public class OrderService {
 
         return  OrderDto.of(savedOrder);
     }
+
+    public OrderDto getOrder(OrderDto orderDto) {
+
+        final Order savedOrder = orderRepository.findOrderByClientNameAndClientPhoneNum(orderDto.getClientName(), orderDto.getClientPhoneNum())
+                .orElseThrow(RuntimeException::new);
+        return OrderDto.of(savedOrder);
+    }
 }

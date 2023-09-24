@@ -3,10 +3,12 @@ package co.kr.demo.service.dto.domainDto;
 
 import co.kr.demo.domain.model.Order;
 import co.kr.demo.service.dto.viewDto.OrderViewDto;
+import co.kr.demo.service.dto.viewDto.ProductViewDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
@@ -65,4 +67,13 @@ public class OrderDto {
     }
 
 
+    public static OrderViewDto toOrderViewDtoByData(OrderDto orderDto, List<ProductViewDto> productViewDtoList) {
+        return OrderViewDto.builder()
+                .orderId(orderDto.getOrderId())
+                .clientPhoneNum(orderDto.getClientPhoneNum())
+                .clientName(orderDto.getClientName())
+                .reservationDate(orderDto.getReservationDate())
+                .products(productViewDtoList)
+                .build();
+    }
 }

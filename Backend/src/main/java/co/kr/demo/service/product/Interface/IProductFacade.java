@@ -14,5 +14,5 @@ public interface IProductFacade {
 
     ProductViewDto getProductDetail(Long id);
 
-    ProductViewDto updateProductDetail(ProductViewDto productViewDto);
+    void updateProductDetail(ProductViewDto productViewDto);
 }
