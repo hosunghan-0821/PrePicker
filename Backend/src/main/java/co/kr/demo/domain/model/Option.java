@@ -4,8 +4,6 @@ package co.kr.demo.domain.model;
 import co.kr.demo.domain.model.enumeration.EOptionType;
 import co.kr.demo.service.dto.domainDto.OptionDto;
 import lombok.*;
-import org.graalvm.compiler.options.OptionType;
-;
 
 
 import javax.persistence.*;
