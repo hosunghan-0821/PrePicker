@@ -37,7 +37,7 @@ node {
             }
 
             stage ('Docker Build') {
-                sh 'docker build -t prepicker -f ./Backend/DockerFile .'
+                sh 'docker build -t prepicker -f ./DockerFile .'
             }
 
             stage ('Deploy') {
