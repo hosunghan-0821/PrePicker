@@ -67,7 +67,7 @@ public class ProductDto {
                 .productName(product.getProductName())
                 .productCode(product.getProductCode())
                 .optionDtoList(new ArrayList<>())
-                .imageDtoList(new ArrayList<>())
+                .imageDtoList(product.getImageList().stream().map(ImageDto::toImageDtoByImage).collect(Collectors.toList()))
                 .build();
 
 
