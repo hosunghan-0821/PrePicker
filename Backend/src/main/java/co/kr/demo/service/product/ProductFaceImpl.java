@@ -73,14 +73,14 @@ public class ProductFaceImpl implements IProductFacade {
         productService.updateProduct(productDto);
 
         //2. 기존 Option 제거 후 새로 Insert
-        optionService.deleteProductOption(productDto);
+        // 기존에 존재하는 것과 존재하지 않는것 추가
 
-        for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
-            optionService.saveOption(OptionDto.toOptionDtoByViewDto(optionViewDto), productDto);
-        }
+        final List<OptionDto> optionDtoList = productViewDto.getOptionDetails().stream().map(OptionDto::toOptionDtoByViewDto).collect(Collectors.toList());
+        optionService.updateOption(productDto,optionDtoList);
+
 
         //3. 기존 이미지 내용 지우고, 새로운 이미지 추가
-       imageService.deleteImage(productDto);
+        imageService.deleteImage(productDto);
 
         for (ImageViewDto imageViewDto : productViewDto.getImageViewDtoList()) {
             imageService.saveImage(ImageDto.toImageDtoByViewDto(imageViewDto), productDto);

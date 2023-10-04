@@ -17,8 +17,6 @@ public class OptionDetailDto {
     private Long optionDetailId;
     @JsonProperty("value")
     private String optionValue;
-    @JsonProperty("fee")
-    private Long fee;
 
 
     public static OptionDetailDto toOptionDetailDtoByViewDto(OptionViewDto optionViewDto) {
@@ -26,14 +24,12 @@ public class OptionDetailDto {
         return OptionDetailDto
                 .builder()
                 .optionValue(optionViewDto.getOptionValue())
-                .fee(optionViewDto.getFee()).
-                build();
+                .build();
     }
 
-    public static OptionDetailDto of(OptionDetail optionDetail){
+    public static OptionDetailDto of(OptionDetail optionDetail) {
         return OptionDetailDto.builder()
                 .optionDetailId(optionDetail.getId())
-                .fee(optionDetail.getAdditionalFee())
                 .optionValue(optionDetail.getOptionValue())
                 .build();
     }

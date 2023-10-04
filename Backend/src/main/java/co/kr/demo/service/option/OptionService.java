@@ -11,8 +11,8 @@ import co.kr.demo.service.dto.domainDto.ProductDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -39,12 +39,31 @@ public class OptionService {
                 .build();
         productOptionRepository.save(productOption);
     }
-    public void deleteProductOption(ProductDto productDto) {
 
-        final List<ProductOption> productOptionList = productOptionRepository.findAllByProduct(Product.builder().id(productDto.getProductId()).build());
-        final List<Option> optionList = productOptionList.stream().map(ProductOption::getOption).collect(Collectors.toList());
-        productOptionRepository.deleteAllInBatch(productOptionList);
-        optionRepository.deleteAllInBatch(optionList);
+    public void updateOption(ProductDto productDto, List<OptionDto> optionDtoList) {
+        final Product savedProduct = Product.builder().id(productDto.getProductId()).build();
+        final List<ProductOption> productOptionList = productOptionRepository.findAllByProduct(savedProduct);
+        final Map<Long, ProductOption> productOptionMap = productOptionList.stream().collect(Collectors.toMap(
+                productOption -> productOption.getOption().getId(),
+                productOption -> productOption
+        ));
+        for (OptionDto optionDto : optionDtoList) {
+
+            if (optionDto.getOptionId() == null || optionDto.getOptionId() == 0) {
+                final Option newOption = optionRepository.save(OptionDto.toOption(optionDto));
+                productOptionRepository.save(ProductOption.builder().product(savedProduct).option(newOption).build());
+            } else {
+                final ProductOption productOption = productOptionMap.get(optionDto.getOptionId());
+                if (productOption != null) {
+                    productOption.getOption().updateOption(optionDto);
+                }
+                productOptionMap.remove(optionDto.getOptionId());
+            }
+        }
+
+        for (Map.Entry<Long, ProductOption> entry : productOptionMap.entrySet()) {
+            entry.getValue().softDelete();
+        }
 
     }
 }

@@ -33,7 +33,6 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     @Where(clause = "is_deleted=false")
     private List<ProductOption> productOptionList;
-
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<Image> imageList;
 
