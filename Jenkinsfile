@@ -32,7 +32,7 @@ node {
 
         dir("${env.WORKSPACE}") {
             stage ('Gradle Build') {
-                sh 'chmod +x gradlew'
+                sh 'chmod +x ./Backend/gradlew'
                 sh './Backend/gradlew clean build'
             }
 
