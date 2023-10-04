@@ -49,7 +49,7 @@ node {
                     echo "Docker Container 실행 중이지 않았음"
                 }
 
-                sh 'docker run -d --name prepicker_jar -p 8084:8084 prepicker '
+                sh 'docker run -d --name prepicker_jar -p 8084:8080 prepicker '
             }
             stage ('Finish'){
                sh 'docker rmi $(docker images -f "dangling=true" -q)'
