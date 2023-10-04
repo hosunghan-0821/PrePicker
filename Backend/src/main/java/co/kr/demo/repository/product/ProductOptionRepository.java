@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface ProductOptionRepository extends JpaRepository<ProductOption,Long> {
 
-    List<ProductOption> findProductOptionByProductAndDeleted(Product product,boolean isDeleted);
+    List<ProductOption> findAllByProduct(Product product);
+
 }
