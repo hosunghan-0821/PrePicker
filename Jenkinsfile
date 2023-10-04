@@ -52,7 +52,7 @@ node {
                 sh 'docker run -d --name prepicker_jar -p 8084:8080 prepicker '
             }
             stage ('Finish'){
-               sh 'docker rmi $(docker images -f "dangling=true" -q)'
+                sh 'docker rmi $(docker images -f "dangling=true" -q)'
             }
         }
     }
