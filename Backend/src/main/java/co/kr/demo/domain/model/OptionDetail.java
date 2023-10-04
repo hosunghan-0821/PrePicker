@@ -25,7 +25,7 @@ public class OptionDetail  extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     private OrderProduct orderProduct;
     private String optionValue;
-    private Long additionalFee;
+
 
 
 }
