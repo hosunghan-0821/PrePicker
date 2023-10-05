@@ -30,7 +30,7 @@ public class OrderFacadeImpl implements IOrderFacade {
     private final OptionDetailService optionDetailService;
 
     private final OptionService optionService;
-    private final OrderRepository orderRepository;
+
 
     @Override
     public void registerOrder(OrderViewDto orderViewDto) {
