@@ -11,11 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1")
 public class testController {
 
-
-    private final SMSService smsService;
-
     @GetMapping("/sms-test")
     public void SMSTest(){
-        smsService.sendMessage();
     }
 }

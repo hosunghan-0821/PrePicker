@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter(AccessLevel.PROTECTED)
-
 public class SMSRequestDto {
 
     private String type;
@@ -19,5 +18,5 @@ public class SMSRequestDto {
     private String countryCode;
     private String from;
     private String content;
-    private List<MessageDto> messages;
+    private List<SMSMessageDto> messages;
 }
