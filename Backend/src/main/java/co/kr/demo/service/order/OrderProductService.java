@@ -28,7 +28,7 @@ public class OrderProductService {
         final Order order = OrderDto.toOrder(orderDto);
 
         final Product product = ProductDto.toProduct(productDto);
-        //Order-Product 다대다 테이블에 저장하기전에, Validation
+
 
         OrderProduct orderProduct = OrderProduct.builder()
                 .order(order)

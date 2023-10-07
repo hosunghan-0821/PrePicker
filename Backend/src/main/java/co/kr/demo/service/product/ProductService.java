@@ -1,6 +1,8 @@
 package co.kr.demo.service.product;
 
 import co.kr.demo.domain.model.Product;
+import co.kr.demo.global.exception.ErrorCode;
+import co.kr.demo.global.exception.NotFoundException;
 import co.kr.demo.repository.product.ProductRepository;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,7 @@ public class ProductService {
     public Product isExistProduct(Long productId) {
 
         return productRepository.findById(productId)
-                .orElseThrow(() -> (new RuntimeException("예외처리 필요")));
+                .orElseThrow(() -> (new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION_PRODUCT)));
     }
 
 
