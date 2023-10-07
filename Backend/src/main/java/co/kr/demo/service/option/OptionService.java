@@ -34,7 +34,7 @@ public class OptionService {
     public void saveOption(OptionDto optionDto, ProductDto productDto) {
         final Option savedOption = optionRepository.save(OptionDto.toOption(optionDto));
 
-        final Product savedProduct = productRepository.findById(productDto.getProductId()).orElse(null);
+        final Product savedProduct =ProductDto.toProduct(productDto);
         final ProductOption productOption = ProductOption.builder()
                 .option(savedOption)
                 .product(savedProduct)
