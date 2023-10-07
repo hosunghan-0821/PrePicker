@@ -1,4 +1,4 @@
-package co.kr.demo.api;
+package co.kr.demo.api.admin;
 
 import co.kr.demo.global.exception.ErrorCode;
 import co.kr.demo.global.exception.NotFoundException;

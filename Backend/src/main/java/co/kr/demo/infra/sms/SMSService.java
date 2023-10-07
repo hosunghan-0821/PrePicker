@@ -1,5 +1,6 @@
 package co.kr.demo.infra.sms;
 
+import co.kr.demo.global.config.ApplicationOptionConfig;
 import co.kr.demo.global.exception.InternalServerException;
 import co.kr.demo.service.dto.viewDto.OrderViewDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,9 +37,15 @@ public class SMSService {
 
     private final SMSMessageBuilder smsMessageBuilder;
 
+    private final ApplicationOptionConfig applicationOptionConfig;
+
     @Async
     public void sendMessage(List<SMSMessageDto> SMSMessageDtoList) {
 
+        if(!applicationOptionConfig.isSMSService()){
+            log.info("SMS Service off");
+            return;
+        }
         final RestTemplate rt = new RestTemplate();
         final HttpHeaders headers = makeSMSRequestHeader();
         final SMSRequestDto smsRequestDto = makeSMSRequestDto(SMSMessageDtoList);
