@@ -3,6 +3,8 @@ package co.kr.demo.service.option;
 import co.kr.demo.domain.model.Option;
 import co.kr.demo.domain.model.Product;
 import co.kr.demo.domain.model.ProductOption;
+import co.kr.demo.global.exception.ErrorCode;
+import co.kr.demo.global.exception.NotFoundException;
 import co.kr.demo.repository.option.OptionRepository;
 import co.kr.demo.repository.product.ProductOptionRepository;
 import co.kr.demo.repository.product.ProductRepository;
@@ -26,13 +28,13 @@ public class OptionService {
 
     public void isExistOption(Long optionId) {
         optionRepository.findById(optionId)
-                .orElseThrow(() -> new RuntimeException("exception 처리 해야함"));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION));
     }
 
     public void saveOption(OptionDto optionDto, ProductDto productDto) {
         final Option savedOption = optionRepository.save(OptionDto.toOption(optionDto));
 
-        final Product savedProduct = productRepository.findById(productDto.getProductId()).orElse(null);
+        final Product savedProduct =ProductDto.toProduct(productDto);
         final ProductOption productOption = ProductOption.builder()
                 .option(savedOption)
                 .product(savedProduct)

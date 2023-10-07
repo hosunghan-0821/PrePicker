@@ -1,8 +1,11 @@
 package co.kr.demo.infra.sms;
 
+import co.kr.demo.global.config.ApplicationOptionConfig;
+import co.kr.demo.global.exception.InternalServerException;
 import co.kr.demo.service.dto.viewDto.OrderViewDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -15,6 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.List;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class SMSService {
     @Value("${naver-cloud-sms.accessKey}")
@@ -33,9 +37,15 @@ public class SMSService {
 
     private final SMSMessageBuilder smsMessageBuilder;
 
+    private final ApplicationOptionConfig applicationOptionConfig;
+
     @Async
     public void sendMessage(List<SMSMessageDto> SMSMessageDtoList) {
 
+        if(!applicationOptionConfig.isSMSService()){
+            log.info("SMS Service off");
+            return;
+        }
         final RestTemplate rt = new RestTemplate();
         final HttpHeaders headers = makeSMSRequestHeader();
         final SMSRequestDto smsRequestDto = makeSMSRequestDto(SMSMessageDtoList);
@@ -43,14 +53,18 @@ public class SMSService {
         try {
             String body = objectMapper.writeValueAsString(smsRequestDto);
             HttpEntity<String> request = new HttpEntity<>(body, headers);
+
+            final ResponseEntity<SMSResponseDto> response = rt.exchange("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages", HttpMethod.POST, request, SMSResponseDto.class);
+            //성공 할 때도 문자 발송이 되는 것이기 때문에 개인적으로 Notice해줄 수 있어야 함.
+            log.info("SMS 발신 성공");
+
+        } catch (Exception e) {
             /*
              * TO-DO
              * 응답받아서 Status-CODE 보고 난후 Exception 처리를 하든 뭘 하든 해야함
              * */
-            final ResponseEntity<String> exchange = rt.exchange("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/messages", HttpMethod.POST, request, String.class);
-            System.out.println(exchange);
-        } catch (Exception e) {
             e.printStackTrace();
+            throw new InternalServerException();
         }
 
 
@@ -63,9 +77,9 @@ public class SMSService {
                 if (data instanceof OrderViewDto) {
                     OrderViewDto orderViewDto = (OrderViewDto) data;
                     SMSMessageDto smsMessageDto = new SMSMessageDto();
-                    smsMessageDto.setTo(orderViewDto.getClientPhoneNum().replaceAll("-",""));
+                    smsMessageDto.setTo(orderViewDto.getClientPhoneNum().replaceAll("-", ""));
                     smsMessageDto.setContent(smsMessageBuilder.makeMessageConfirm(orderViewDto));
-                    System.out.println(smsMessageDto.getContent());
+                    log.info(smsMessageDto.getContent());
                     return smsMessageDto;
                 }
 

@@ -59,8 +59,9 @@ public class OrderFacadeImpl implements IOrderFacade {
                 optionDetailService.saveOptionDetail(OptionDto.toOptionDtoByViewDto(optionViewDto), orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
             }
         }
-        final SMSMessageDto smsMessageDto = smsService.makeSMSMessage(orderViewDto, SMSMessageType.ORDER_CONFIRM);
 
+        //4 주문 성공 안내 메세지 발송
+        final SMSMessageDto smsMessageDto = smsService.makeSMSMessage(orderViewDto, SMSMessageType.ORDER_CONFIRM);
         smsService.sendMessage(new ArrayList<>(Arrays.asList(smsMessageDto)));
 
     }
