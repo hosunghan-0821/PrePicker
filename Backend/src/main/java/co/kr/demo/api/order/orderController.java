@@ -21,7 +21,7 @@ public class orderController {
     @ApiOperation(value = "주문 저장")
     public ResponseEntity<ResponseDto<OrderViewDto>> registerOrder(@RequestBody OrderViewDto orderViewDto) {
 
-        //Validation 작업 진행
+        //Validation 작업 진행 필요
         orderFacade.registerOrder(orderViewDto);
         return ResponseEntity.ok(ResponseDto.response(orderViewDto));
     }
@@ -33,4 +33,9 @@ public class orderController {
         OrderViewDto orderDetail = orderFacade.getOrderDetail(orderViewDto);
         return ResponseEntity.ok(ResponseDto.response(orderDetail));
     }
+
+    /*
+    *   To-DO
+    *   주문취소 개발해야함
+    * */
 }

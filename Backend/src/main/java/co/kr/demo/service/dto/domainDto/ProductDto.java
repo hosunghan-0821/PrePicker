@@ -61,6 +61,17 @@ public class ProductDto {
 
     public static ProductDto of(Product product) {
 
+        if(product.getImageList()==null){
+            return ProductDto.builder()
+                    .productId(product.getId())
+                    .productPrice(product.getPrice())
+                    .productName(product.getProductName())
+                    .productCode(product.getProductCode())
+                    .optionDtoList(new ArrayList<>())
+                    .imageDtoList(new ArrayList<>())
+                    .build();
+        }
+
         return ProductDto.builder()
                 .productId(product.getId())
                 .productPrice(product.getPrice())
@@ -69,9 +80,8 @@ public class ProductDto {
                 .optionDtoList(new ArrayList<>())
                 .imageDtoList(product.getImageList().stream().map(ImageDto::toImageDtoByImage).collect(Collectors.toList()))
                 .build();
-
-
     }
+
 
     public static ProductViewDto productViewDtoByProductDto(ProductDto productDto) {
         return ProductViewDto.builder()
