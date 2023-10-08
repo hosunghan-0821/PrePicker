@@ -17,25 +17,25 @@ public class productController {
 
     private final IProductFacade productFacade;
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<ResponseDto<ProductViewDto>> registerProduct(@RequestBody ProductViewDto productViewDto) {
         productFacade.productRegister(productViewDto);
         return ResponseEntity.ok(ResponseDto.response(productViewDto));
     }
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public ResponseEntity<ResponseDto<Page<ProductViewDto>>> getProductList(Pageable pageable) {
         final Page<ProductViewDto> productList = productFacade.getProductList(pageable);
         return ResponseEntity.ok(ResponseDto.response(productList));
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<ResponseDto<ProductViewDto>> getProductDetail(@PathVariable Long id) {
         final ProductViewDto productDetail = productFacade.getProductDetail(id);
         return ResponseEntity.ok(ResponseDto.response(productDetail));
     }
 
-    @PutMapping("/product")
+    @PutMapping("/products")
     public ResponseEntity<ResponseDto<ProductViewDto>> updateProductDetail(@RequestBody ProductViewDto productViewDto){
 
         assert productViewDto.getProductId() != null;
@@ -44,5 +44,9 @@ public class productController {
         return ResponseEntity.ok(ResponseDto.response(productViewDto));
     }
 
+    @PostMapping("/products")
+    public void registerProductsWithCSV(){
+
+    }
 
 }
