@@ -1,6 +1,8 @@
-package co.kr.demo.global.exception;
+package co.kr.demo.global.error;
 
 
+import co.kr.demo.global.error.dto.ErrorResponseDto;
+import co.kr.demo.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,6 @@
 package co.kr.demo.api.admin;
 
-import co.kr.demo.global.exception.ErrorCode;
-import co.kr.demo.global.exception.NotFoundException;
-import co.kr.demo.infra.sms.SMSService;
+import co.kr.demo.global.error.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

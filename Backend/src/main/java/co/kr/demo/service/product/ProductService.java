@@ -1,8 +1,8 @@
 package co.kr.demo.service.product;
 
 import co.kr.demo.domain.model.Product;
-import co.kr.demo.global.exception.ErrorCode;
-import co.kr.demo.global.exception.NotFoundException;
+import co.kr.demo.global.error.dto.ErrorCode;
+import co.kr.demo.global.error.exception.NotFoundException;
 import co.kr.demo.repository.product.ProductRepository;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import lombok.RequiredArgsConstructor;

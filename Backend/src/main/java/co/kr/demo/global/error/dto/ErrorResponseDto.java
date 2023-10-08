@@ -1,4 +1,4 @@
-package co.kr.demo.global.exception;
+package co.kr.demo.global.error.dto;
 
 import lombok.*;
 
