@@ -17,7 +17,7 @@ public class orderController {
     private final IOrderFacade orderFacade;
 
 
-    @PostMapping("/order")
+    @PostMapping("/orders")
     @ApiOperation(value = "주문 저장")
     public ResponseEntity<ResponseDto<OrderViewDto>> registerOrder(@RequestBody OrderViewDto orderViewDto) {
 
@@ -26,7 +26,7 @@ public class orderController {
         return ResponseEntity.ok(ResponseDto.response(orderViewDto));
     }
 
-    @PostMapping("/order/detail")
+    @PostMapping("/orders/detail")
     @ApiOperation(value = "주문 상세보기")
     public ResponseEntity<ResponseDto<OrderViewDto>> getOrderDetail(@RequestBody OrderViewDto orderViewDto) {
         //조회 규칙 핸드폰 번호,성명 모두 같아야 조회

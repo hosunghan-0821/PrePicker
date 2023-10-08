@@ -4,11 +4,19 @@ package co.kr.demo.api.product;
 import co.kr.demo.service.dto.ResponseDto;
 import co.kr.demo.service.dto.viewDto.ProductViewDto;
 import co.kr.demo.service.product.Interface.IProductFacade;
+import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,25 +25,25 @@ public class productController {
 
     private final IProductFacade productFacade;
 
-    @PostMapping("/product")
+    @PostMapping("/products")
     public ResponseEntity<ResponseDto<ProductViewDto>> registerProduct(@RequestBody ProductViewDto productViewDto) {
         productFacade.productRegister(productViewDto);
         return ResponseEntity.ok(ResponseDto.response(productViewDto));
     }
 
-    @GetMapping("/product")
+    @GetMapping("/products")
     public ResponseEntity<ResponseDto<Page<ProductViewDto>>> getProductList(Pageable pageable) {
         final Page<ProductViewDto> productList = productFacade.getProductList(pageable);
         return ResponseEntity.ok(ResponseDto.response(productList));
     }
 
-    @GetMapping("/product/{id}")
+    @GetMapping("/products/{id}")
     public ResponseEntity<ResponseDto<ProductViewDto>> getProductDetail(@PathVariable Long id) {
         final ProductViewDto productDetail = productFacade.getProductDetail(id);
         return ResponseEntity.ok(ResponseDto.response(productDetail));
     }
 
-    @PutMapping("/product")
+    @PutMapping("/products")
     public ResponseEntity<ResponseDto<ProductViewDto>> updateProductDetail(@RequestBody ProductViewDto productViewDto){
 
         assert productViewDto.getProductId() != null;

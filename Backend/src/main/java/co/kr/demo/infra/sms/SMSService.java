@@ -1,7 +1,7 @@
 package co.kr.demo.infra.sms;
 
 import co.kr.demo.global.config.ApplicationOptionConfig;
-import co.kr.demo.global.exception.InternalServerException;
+import co.kr.demo.global.error.exception.InternalServerException;
 import co.kr.demo.service.dto.viewDto.OrderViewDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

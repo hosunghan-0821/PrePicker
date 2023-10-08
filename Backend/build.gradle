@@ -54,6 +54,9 @@ dependencies {
 
     //S3
     implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
+
+    //csv Reader
+    implementation 'com.opencsv:opencsv:5.8'
 }
 
 tasks.named('test') {
