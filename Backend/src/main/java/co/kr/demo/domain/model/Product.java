@@ -1,8 +1,6 @@
 package co.kr.demo.domain.model;
 
 
-import co.kr.demo.domain.model.enumeration.EMClassification;
-import co.kr.demo.domain.model.enumeration.ESClassification;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -23,11 +21,9 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String productName;
-    @Enumerated(EnumType.STRING)
-    private EMClassification eMClassification;
 
-    @Enumerated(EnumType.STRING)
-    private ESClassification eSClassification;
+    private String LClassification;
+    private String MClassification;
     private String productCode;
     private Long price;
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
@@ -40,6 +36,7 @@ public class Product extends BaseEntity {
         this.productName = productDto.getProductName();
         this.productCode = productDto.getProductCode();
         this.price = productDto.getProductPrice();
-        // 추후에 eMClassification, eSClassification 추가 되어야함.
+        this.LClassification=productDto.getLClassification();
+        this.MClassification=productDto.getMClassification();
     }
 }

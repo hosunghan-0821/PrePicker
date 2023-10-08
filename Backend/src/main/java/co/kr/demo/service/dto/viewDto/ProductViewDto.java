@@ -1,11 +1,7 @@
 package co.kr.demo.service.dto.viewDto;
 
-import co.kr.demo.domain.model.Product;
-import co.kr.demo.service.dto.domainDto.ProductDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
-import javax.swing.text.html.ImageView;
 import java.util.List;
 
 
@@ -24,9 +20,15 @@ public class ProductViewDto {
 
     @JsonProperty("code")
     private String productCode;
-
     @JsonProperty("price")
     private Long productPrice;
+
+    @JsonProperty("LClassification")
+    private String LClassification;
+
+    @JsonProperty("MClassification")
+    private String MClassification;
+
 
     @JsonProperty("options")
     private List<OptionViewDto> optionDetails;
