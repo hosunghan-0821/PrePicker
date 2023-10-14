@@ -60,6 +60,9 @@ dependencies {
 
     //validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //Discord Bot
+    implementation 'net.dv8tion:JDA:5.0.0-beta.5'
 }
 
 tasks.named('test') {
