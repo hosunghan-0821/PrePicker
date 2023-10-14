@@ -26,8 +26,8 @@ public class imageController {
     private final IImageUpload S3ImageUploader;
 
 
-    @PostMapping("/image")
-    public ResponseEntity<ResponseDto<?>> test(@RequestPart(value = "files", required = false) List<MultipartFile> multipartFileList) throws IOException {
+    @PostMapping("/images")
+    public ResponseEntity<ResponseDto<?>> registerImages(@RequestPart(value = "files", required = false) List<MultipartFile> multipartFileList) throws IOException {
         final List<String> savedPath = S3ImageUploader.uploadImage(multipartFileList);
         return ResponseEntity.ok(ResponseDto.response(ResponseDto.response(savedPath)));
 

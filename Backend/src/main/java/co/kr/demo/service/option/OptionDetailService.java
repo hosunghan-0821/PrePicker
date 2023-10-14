@@ -37,7 +37,6 @@ public class OptionDetailService {
                 .option(option)
                 .orderProduct(orderProduct)
                 .optionValue(optionDetailDto.getOptionValue())
-                .additionalFee(optionDetailDto.getFee())
                 .build();
 
         optionDetailRepository.save(optionDetail);

@@ -10,7 +10,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class PrePickerApplication {
 
     public static void main(String[] args) {
+
+
         SpringApplication.run(PrePickerApplication.class, args);
+
+
     }
 
 }

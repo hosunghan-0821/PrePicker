@@ -1,6 +1,9 @@
 package co.kr.demo.service.order;
 
 import co.kr.demo.domain.model.Order;
+import co.kr.demo.infra.sms.SMSMessageDto;
+import co.kr.demo.infra.sms.SMSMessageType;
+import co.kr.demo.infra.sms.SMSService;
 import co.kr.demo.repository.order.OrderRepository;
 import co.kr.demo.service.dto.domainDto.*;
 import co.kr.demo.service.dto.viewDto.OptionViewDto;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -30,7 +34,9 @@ public class OrderFacadeImpl implements IOrderFacade {
     private final OptionDetailService optionDetailService;
 
     private final OptionService optionService;
-    private final OrderRepository orderRepository;
+
+    private final SMSService smsService;
+
 
     @Override
     public void registerOrder(OrderViewDto orderViewDto) {
@@ -48,12 +54,18 @@ public class OrderFacadeImpl implements IOrderFacade {
             final OrderProductDto orderProductDto = orderProductService.saveOrderProduct(savedOrderDto, productDto);
 
             for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
+                final OptionDto optionDto = OptionDto.toOptionDtoByViewDto(optionViewDto);
 
                 optionService.isExistOption(optionViewDto.getOptionId());
-                optionDetailService.saveOptionDetail(OptionDto.toOptionDtoByViewDto(optionViewDto), orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
+                optionService.matchProductAndOption(optionDto,productDto);
 
+                optionDetailService.saveOptionDetail(optionDto, orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
             }
         }
+
+        //4 주문 성공 안내 메세지 발송
+        final SMSMessageDto smsMessageDto = smsService.makeSMSMessage(orderViewDto, SMSMessageType.ORDER_CONFIRM);
+        smsService.sendMessage(new ArrayList<>(Arrays.asList(smsMessageDto)));
 
     }
 

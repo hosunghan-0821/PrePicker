@@ -26,9 +26,12 @@ public class Option extends BaseEntity{
     private EOptionType eOptionType;
     private String additionalData;
 
-    public void update(OptionDto optionDto) {
+    private Long additionalFee;
+
+    public void updateOption(OptionDto optionDto) {
         this.optionName=optionDto.getOptionName();
         this.additionalData=optionDto.getAdditionalData();
         this.eOptionType=optionDto.getEOptionType();
+        this.additionalFee=optionDto.getFee();
     }
 }

@@ -27,6 +27,9 @@ public class ProductDto {
 
     private Long productPrice;
 
+    private String LClassification;
+    private String MClassification;
+
     private List<OptionDto> optionDtoList;
 
     private List<ImageDto> imageDtoList;
@@ -38,6 +41,8 @@ public class ProductDto {
                 .price(productViewDto.getProductPrice())
                 .productName(productViewDto.getProductName())
                 .productCode(productViewDto.getProductCode())
+                .MClassification(productViewDto.getMClassification())
+                .LClassification(productViewDto.getLClassification())
                 .build();
     }
 
@@ -47,6 +52,8 @@ public class ProductDto {
                 .productPrice(productViewDto.getProductPrice())
                 .productName(productViewDto.getProductName())
                 .productCode(productViewDto.getProductCode())
+                .MClassification(productViewDto.getMClassification())
+                .LClassification(productViewDto.getLClassification())
                 .build();
     }
 
@@ -56,22 +63,38 @@ public class ProductDto {
                 .price(productDto.getProductPrice())
                 .productName(productDto.getProductName())
                 .productCode(productDto.getProductCode())
+                .LClassification(productDto.getLClassification())
+                .MClassification(productDto.getMClassification())
                 .build();
     }
 
     public static ProductDto of(Product product) {
+
+        if(product.getImageList()==null){
+            return ProductDto.builder()
+                    .productId(product.getId())
+                    .productPrice(product.getPrice())
+                    .productName(product.getProductName())
+                    .productCode(product.getProductCode())
+                    .LClassification(product.getLClassification())
+                    .MClassification(product.getMClassification())
+                    .optionDtoList(new ArrayList<>())
+                    .imageDtoList(new ArrayList<>())
+                    .build();
+        }
 
         return ProductDto.builder()
                 .productId(product.getId())
                 .productPrice(product.getPrice())
                 .productName(product.getProductName())
                 .productCode(product.getProductCode())
+                .LClassification(product.getLClassification())
+                .MClassification(product.getMClassification())
                 .optionDtoList(new ArrayList<>())
-                .imageDtoList(new ArrayList<>())
+                .imageDtoList(product.getImageList().stream().map(ImageDto::toImageDtoByImage).collect(Collectors.toList()))
                 .build();
-
-
     }
+
 
     public static ProductViewDto productViewDtoByProductDto(ProductDto productDto) {
         return ProductViewDto.builder()
@@ -79,6 +102,8 @@ public class ProductDto {
                 .productPrice(productDto.getProductPrice())
                 .productName(productDto.getProductName())
                 .productCode(productDto.getProductCode())
+                .LClassification(productDto.getLClassification())
+                .MClassification(productDto.getMClassification())
                 .optionDetails(productDto.getOptionDtoList().stream().map(OptionDto::toOptionViewDtoByOptionDto).collect(Collectors.toList()))
                 .imageViewDtoList(productDto.getImageDtoList().stream().map(ImageDto::toImageViewDtoByImageDto).collect(Collectors.toList()))
                 .build();
@@ -90,8 +115,9 @@ public class ProductDto {
                 .productPrice(productDto.getProductPrice())
                 .productName(productDto.getProductName())
                 .productCode(productDto.getProductCode())
+                .LClassification(productDto.getLClassification())
+                .MClassification(productDto.getMClassification())
                 .optionDetails(optionViewDtoList)
-
                 .build();
     }
 

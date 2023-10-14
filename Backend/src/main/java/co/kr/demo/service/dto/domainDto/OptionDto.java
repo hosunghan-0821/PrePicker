@@ -24,6 +24,8 @@ public class OptionDto {
     @JsonProperty("additionalData")
     private String additionalData;
 
+    @JsonProperty("fee")
+    private Long fee;
 
     public static OptionDto toOptionDtoByViewDto(OptionViewDto optionViewDto){
         return OptionDto.builder()
@@ -31,6 +33,7 @@ public class OptionDto {
                 .optionName(optionViewDto.getOptionName())
                 .eOptionType(optionViewDto.getEOptionType())
                 .additionalData(optionViewDto.getAdditionalData())
+                .fee(optionViewDto.getFee())
                 .build();
     }
 
@@ -39,6 +42,7 @@ public class OptionDto {
                 .optionId(optionDto.getOptionId())
                 .eOptionType(optionDto.getEOptionType())
                 .optionName(optionDto.getOptionName())
+                .fee(optionDto.getFee())
                 .build();
     }
 
@@ -47,9 +51,9 @@ public class OptionDto {
                 .optionId(optionDto.getOptionId())
                 .eOptionType(optionDto.getEOptionType())
                 .optionName(optionDto.getOptionName())
+                .fee(optionDto.getFee())
                 .optionDetailId(optionDetailDto.getOptionDetailId())
                 .optionValue(optionDetailDto.getOptionValue())
-                .fee(optionDetailDto.getFee())
                 .build();
     }
 
@@ -58,6 +62,7 @@ public class OptionDto {
                 .optionName(optionDto.getOptionName())
                 .eOptionType(optionDto.getEOptionType())
                 .additionalData(optionDto.getAdditionalData())
+                .additionalFee(optionDto.getFee())
                 .build();
     }
 
@@ -67,6 +72,7 @@ public class OptionDto {
                 .optionName(option.getOptionName())
                 .eOptionType(option.getEOptionType())
                 .additionalData(option.getAdditionalData())
+                .fee(option.getAdditionalFee())
                 .build();
     }
 

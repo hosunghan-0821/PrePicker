@@ -42,6 +42,9 @@ public abstract class BaseEntity {
         this.updateDate=now;
     }
 
+    public void softDelete(){
+        this.isDeleted=true;
+    }
 
 }
 
