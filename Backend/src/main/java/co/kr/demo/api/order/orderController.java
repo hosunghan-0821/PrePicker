@@ -1,12 +1,15 @@
 package co.kr.demo.api.order;
 
 
+import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups;
+import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups.OnRegisterOrder;
 import co.kr.demo.service.dto.ResponseDto;
 import co.kr.demo.service.dto.viewDto.OrderViewDto;
 import co.kr.demo.service.order.Interface.IOrderFacade;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,7 +22,7 @@ public class orderController {
 
     @PostMapping("/orders")
     @ApiOperation(value = "주문 저장")
-    public ResponseEntity<ResponseDto<OrderViewDto>> registerOrder(@RequestBody OrderViewDto orderViewDto) {
+    public ResponseEntity<ResponseDto<OrderViewDto>> registerOrder(@Validated(value = {OnRegisterOrder.class}) @RequestBody OrderViewDto orderViewDto) {
 
         //Validation 작업 진행 필요
         orderFacade.registerOrder(orderViewDto);
@@ -35,7 +38,7 @@ public class orderController {
     }
 
     /*
-    *   To-DO
-    *   주문취소 개발해야함
-    * */
+     *   To-DO
+     *   주문취소 개발해야함
+     * */
 }
