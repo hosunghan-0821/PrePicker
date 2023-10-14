@@ -1,10 +1,11 @@
 package co.kr.demo.global.error.dto;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Setter(AccessLevel.PROTECTED)
 @Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponseDto {
