@@ -5,31 +5,34 @@ import co.kr.demo.PrePickerApplication;
 import co.kr.demo.domain.model.Product;
 import co.kr.demo.repository.product.ProductRepository;
 import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest(classes = PrePickerApplication.class)
+@ActiveProfiles("h2test")
 public class BatchInsertTest {
-
 
     @Autowired
     private ProductRepository productRepository;
+
     @Test
-    @Ignore
+    @Disabled
     @DisplayName("Batch Insert 성능 vs JPA SaveAll()")
-    public void test(){
+    public void test() {
         List<Product> productList = new ArrayList<>();
 
-        for(int i =0 ; i < 1000;i++){
+        for (int i = 0; i < 1000; i++) {
             Product product = Product.builder()
-                    .productName("test"+i)
-                    .productCode("2123"+i)
+                    .productName("test" + i)
+                    .productCode("2123" + i)
                     .price(123L)
                     .MClassification("123")
                     .LClassification("456")
@@ -61,10 +64,6 @@ public class BatchInsertTest {
         // 실행 속도 계산 및 출력
         elapsedTime = java.time.Duration.between(start, end).toMillis();
         System.out.println("총 실행 시간: " + elapsedTime + " 밀리초");
-
-
-
-
 
     }
 }
