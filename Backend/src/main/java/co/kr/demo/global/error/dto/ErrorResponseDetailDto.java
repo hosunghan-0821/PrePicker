@@ -26,8 +26,8 @@ public class ErrorResponseDetailDto extends ErrorResponseDto {
     }
 
 
-    public void addErrorDetail(String errorObject, String errorDetailMessage) {
-        this.errorDetailList.add(new ErrorDetail(errorObject, errorDetailMessage));
+    public void addErrorDetail(String errorObject, String errorDetailMessage,String errorField) {
+        this.errorDetailList.add(new ErrorDetail(errorObject, errorDetailMessage,errorField));
     }
 
     @Getter
@@ -35,9 +35,12 @@ public class ErrorResponseDetailDto extends ErrorResponseDto {
     class ErrorDetail {
         private String errorObject;
         private String errorDetailMessage;
+        private String errorField;
 
-        private ErrorDetail(String errorObject, String errorDetailMessage) {
+        private ErrorDetail(String errorObject, String errorDetailMessage, String errorField) {
+
             this.errorObject = errorObject;
+            this.errorField = errorField;
             this.errorDetailMessage = errorDetailMessage;
         }
     }

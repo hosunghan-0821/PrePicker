@@ -28,6 +28,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExceptionController {
 
+
+    /*
+     * TO-DO
+     * AOP를 통해서 Exception 잡던지, 각 Excpetion 캐치하는 곳에서 쏘는걸 잡던지.. 어쩃든 모니터링이 필요하다.
+     * */
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleRunTimeException(RuntimeException ex, NativeWebRequest request) {
         if (ex instanceof NotFoundException) {
@@ -46,7 +52,7 @@ public class ExceptionController {
 
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponseDetailDto> HandleMethodArgumentNotValidException(MethodArgumentNotValidException ex, NativeWebRequest request) {
+    public ResponseEntity<? extends ErrorResponseDto> HandleMethodArgumentNotValidException(MethodArgumentNotValidException ex, NativeWebRequest request) {
 
         final List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
 
@@ -58,7 +64,11 @@ public class ExceptionController {
 
         if (ex.getBindingResult().hasFieldErrors()) {
             for (ObjectError objectError : allErrors) {
-                errorResponseDetailDto.addErrorDetail(objectError.getObjectName(), objectError.getDefaultMessage());
+
+                final String errorMessage = objectError.toString();
+                final String field = errorMessage.substring(errorMessage.indexOf("on field") + 8, errorMessage.indexOf(":", errorMessage.indexOf("on field")));
+
+                errorResponseDetailDto.addErrorDetail(objectError.getObjectName(), objectError.getDefaultMessage(), field);
             }
         }
 
