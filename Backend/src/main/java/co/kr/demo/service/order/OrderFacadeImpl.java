@@ -54,9 +54,12 @@ public class OrderFacadeImpl implements IOrderFacade {
             final OrderProductDto orderProductDto = orderProductService.saveOrderProduct(savedOrderDto, productDto);
 
             for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
+                final OptionDto optionDto = OptionDto.toOptionDtoByViewDto(optionViewDto);
 
                 optionService.isExistOption(optionViewDto.getOptionId());
-                optionDetailService.saveOptionDetail(OptionDto.toOptionDtoByViewDto(optionViewDto), orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
+                optionService.matchProductAndOption(optionDto,productDto);
+
+                optionDetailService.saveOptionDetail(optionDto, orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
             }
         }
 

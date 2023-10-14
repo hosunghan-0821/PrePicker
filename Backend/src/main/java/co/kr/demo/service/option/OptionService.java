@@ -34,7 +34,7 @@ public class OptionService {
     public void saveOption(OptionDto optionDto, ProductDto productDto) {
         final Option savedOption = optionRepository.save(OptionDto.toOption(optionDto));
 
-        final Product savedProduct =ProductDto.toProduct(productDto);
+        final Product savedProduct = ProductDto.toProduct(productDto);
         final ProductOption productOption = ProductOption.builder()
                 .option(savedOption)
                 .product(savedProduct)
@@ -67,5 +67,12 @@ public class OptionService {
             entry.getValue().softDelete();
         }
 
+    }
+
+    public void matchProductAndOption(OptionDto optionDto, ProductDto productDto) {
+        final List<ProductOption> allByProductAndOption = productOptionRepository.findAllByProductAndOption(Product.builder().id(productDto.getProductId()).build(), Option.builder().id(optionDto.getOptionId()).build());
+        if(allByProductAndOption.isEmpty()){
+            throw new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION_PRODUCT_OPTION);
+        }
     }
 }
