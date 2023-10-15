@@ -9,26 +9,38 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.LayoutComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.data.DataObject;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
 import javax.annotation.PostConstruct;
 import javax.security.auth.login.LoginException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
 public class DiscordBot extends ListenerAdapter {
 
+    private Map<String,String> channelHashMap= new HashMap<>();
+    private JDA jda;
     @Value("${discord.bot.token}")
     private String discordBotToken;
 
     @PostConstruct
     public void init() {
-        JDA jda = JDABuilder.createDefault(discordBotToken)
+         jda = JDABuilder.createDefault(discordBotToken)
                 .setActivity(Activity.playing("서버 실행중"))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+
                 .addEventListeners(this)
                 .build();
 
@@ -37,7 +49,26 @@ public class DiscordBot extends ListenerAdapter {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
+        List<TextChannel> textChannels = jda.getTextChannels();
+        //In-Memory로 들고 있는게 낫지 않은가?
+        for(TextChannel textChannel: textChannels){
+
+            log.info("ID :" +  textChannel.getId()+"NAME: "+ textChannel.getName() );
+            channelHashMap.put(textChannel.getId(),textChannel.getName());
+
+            Button primary = Button.primary("hello", "click me");
+            Button naver = Button.link("https://www.youtube.com/", "Naver");
+
+
+            textChannel.sendMessage("123").queue();
+//            textChannel.sendMessageComponents(layoutComponent).queue();
+
+
+        }
+
     }
+
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -57,6 +88,10 @@ public class DiscordBot extends ListenerAdapter {
                 textChannel.sendMessage(returnMessage).queue();
             }
         }
+    }
+
+    public void sendMessage(){
+
     }
 
 
