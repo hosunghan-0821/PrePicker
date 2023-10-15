@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -14,6 +15,7 @@ import net.dv8tion.jda.api.interactions.components.LayoutComponent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.utils.data.DataObject;
 import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,9 +24,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.security.auth.login.LoginException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.nio.file.Files;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -36,7 +38,7 @@ public class DiscordBot extends ListenerAdapter {
     private String discordBotToken;
 
     @PostConstruct
-    public void init() {
+    public void init() throws IOException {
          jda = JDABuilder.createDefault(discordBotToken)
                 .setActivity(Activity.playing("서버 실행중"))
                 .enableIntents(GatewayIntent.MESSAGE_CONTENT)
@@ -60,9 +62,24 @@ public class DiscordBot extends ListenerAdapter {
             Button primary = Button.primary("hello", "click me");
             Button naver = Button.link("https://www.youtube.com/", "Naver");
 
+            LayoutComponent layoutComponent = ActionRow.of(naver);
+            MessageEmbed embed = new MessageEmbed(
+                    null,
+                    "신제품 ~~~~~",
+                    "내용 12ㅁ3221312313123132131",
+                    null,
+                    null,
+                    65280,
+                    new MessageEmbed.Thumbnail("https://hosunghan2.s3.ap-northeast-2.amazonaws.com/PICKER_PENG/%ED%99%94%EB%A9%B4%20%EC%BA%A1%EC%B2%98%202023-01-06%20155856_20230916_144431.PNG",null,200,200),
+                    new MessageEmbed.Provider("유튜브","https://www.youtube.com/"),
+                    null,
+                    null,
+                    new MessageEmbed.Footer("하단",null,null),
+                    null,
+                    null);
 
-            textChannel.sendMessage("123").queue();
-//            textChannel.sendMessageComponents(layoutComponent).queue();
+            textChannel.sendMessageEmbeds(embed).addComponents(layoutComponent).queue();
+
 
 
         }
