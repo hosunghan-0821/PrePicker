@@ -1,6 +1,7 @@
 package co.kr.demo.service.order;
 
 import co.kr.demo.domain.model.Order;
+import co.kr.demo.infra.discord.DiscordBot;
 import co.kr.demo.infra.sms.SMSMessageDto;
 import co.kr.demo.infra.sms.SMSMessageType;
 import co.kr.demo.infra.sms.SMSService;
@@ -37,6 +38,8 @@ public class OrderFacadeImpl implements IOrderFacade {
 
     private final SMSService smsService;
 
+    private final DiscordBot discordBot;
+
 
     @Override
     public void registerOrder(OrderViewDto orderViewDto) {
@@ -67,6 +70,8 @@ public class OrderFacadeImpl implements IOrderFacade {
         final SMSMessageDto smsMessageDto = smsService.makeSMSMessage(orderViewDto, SMSMessageType.ORDER_CONFIRM);
         smsService.sendMessage(new ArrayList<>(Arrays.asList(smsMessageDto)));
 
+        //5 관리자에게 Discord 메세지로 주문안내
+        discordBot.sendMessage("일반",smsMessageDto.getContent());
     }
 
     @Override

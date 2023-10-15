@@ -55,33 +55,8 @@ public class DiscordBot extends ListenerAdapter {
         List<TextChannel> textChannels = jda.getTextChannels();
         //In-Memory로 들고 있는게 낫지 않은가?
         for(TextChannel textChannel: textChannels){
-
             log.info("ID :" +  textChannel.getId()+"NAME: "+ textChannel.getName() );
-            channelHashMap.put(textChannel.getId(),textChannel.getName());
-
-            Button primary = Button.primary("hello", "click me");
-            Button naver = Button.link("https://www.youtube.com/", "Naver");
-
-            LayoutComponent layoutComponent = ActionRow.of(naver);
-            MessageEmbed embed = new MessageEmbed(
-                    null,
-                    "신제품 ~~~~~",
-                    "내용 12ㅁ3221312313123132131",
-                    null,
-                    null,
-                    65280,
-                    new MessageEmbed.Thumbnail("https://hosunghan2.s3.ap-northeast-2.amazonaws.com/PICKER_PENG/%ED%99%94%EB%A9%B4%20%EC%BA%A1%EC%B2%98%202023-01-06%20155856_20230916_144431.PNG",null,200,200),
-                    new MessageEmbed.Provider("유튜브","https://www.youtube.com/"),
-                    null,
-                    null,
-                    new MessageEmbed.Footer("하단",null,null),
-                    null,
-                    null);
-
-            textChannel.sendMessageEmbeds(embed).addComponents(layoutComponent).queue();
-
-
-
+            channelHashMap.put(textChannel.getName(),textChannel.getId());
         }
 
     }
@@ -107,13 +82,28 @@ public class DiscordBot extends ListenerAdapter {
         }
     }
 
-    public void sendMessage(){
+    public void sendMessage(String channelName,String message){
+
+        final String id = channelHashMap.get(channelName);
+        final TextChannel textChannel = jda.getTextChannelById(id);
+        if(textChannel!=null){
+            textChannel.sendMessage(message).queue();
+        }
+        else{
+            log.error("유효하지 않은 채널이름 : {}",channelName);
+        }
+
 
     }
 
 
     private String makeReturnMessage(MessageReceivedEvent event, String message) {
 
+        /*
+        * 주문정보 Return 하는 것 만들기
+        *
+        * */
+        //여기서 주문정보 get 하는것 정도는 충분히 가능할거 같다.
         User user = event.getAuthor();
         String returnMessage = "";
         switch (message) {
