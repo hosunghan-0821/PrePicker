@@ -45,20 +45,14 @@ public class SMSMessageBuilder {
         return stringBuilder.toString();
     }
 
-    private String makeClientPhoneNumMask(String clientPhoneNum) {
-        String maskedPhoneNum= clientPhoneNum.substring(0, clientPhoneNum.length() - 4);
-        maskedPhoneNum=maskedPhoneNum+"****";
-        return maskedPhoneNum;
-    }
-
-    private String makeReservationDate(Instant reservationDate){
+    public String makeReservationDate(Instant reservationDate){
 
         ZonedDateTime zonedDateTime = reservationDate.atZone(ASIA_SEOUL);
         return zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시"));
 
     }
 
-    private String makeProductInfoWithProductInfoList(List<ProductViewDto> productViewDtoList){
+    public String makeProductInfoWithProductInfoList(List<ProductViewDto> productViewDtoList){
         Map<String,Integer> productMap = new HashMap<>();
         StringBuilder stringBuilder = new StringBuilder();
         for(ProductViewDto productViewDto: productViewDtoList){
@@ -70,6 +64,14 @@ public class SMSMessageBuilder {
 
         return stringBuilder.toString();
     }
+
+    private String makeClientPhoneNumMask(String clientPhoneNum) {
+        String maskedPhoneNum= clientPhoneNum.substring(0, clientPhoneNum.length() - 4);
+        maskedPhoneNum=maskedPhoneNum+"****";
+        return maskedPhoneNum;
+    }
+
+
     private String makeMessagePostFix() {
         return "문의사항은 매장에 전화주세요 \n다이아몬드 광장점: 031-405-1617";
     }

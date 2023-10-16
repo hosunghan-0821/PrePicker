@@ -1,11 +1,11 @@
 package co.kr.demo.service.order;
 
-import co.kr.demo.domain.model.Order;
 import co.kr.demo.infra.discord.DiscordBot;
+import co.kr.demo.infra.discord.DiscordChannel;
+import co.kr.demo.infra.discord.EDiscordChannel;
 import co.kr.demo.infra.sms.SMSMessageDto;
 import co.kr.demo.infra.sms.SMSMessageType;
 import co.kr.demo.infra.sms.SMSService;
-import co.kr.demo.repository.order.OrderRepository;
 import co.kr.demo.service.dto.domainDto.*;
 import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import co.kr.demo.service.option.OptionDetailService;
@@ -38,7 +38,7 @@ public class OrderFacadeImpl implements IOrderFacade {
 
     private final SMSService smsService;
 
-    private final DiscordBot discordBot;
+    private final DiscordChannel discordChannel;
 
 
     @Override
@@ -71,7 +71,7 @@ public class OrderFacadeImpl implements IOrderFacade {
         smsService.sendMessage(new ArrayList<>(Arrays.asList(smsMessageDto)));
 
         //5 관리자에게 Discord 메세지로 주문안내
-        discordBot.sendMessage("일반",smsMessageDto.getContent());
+        discordChannel.sendMessageToChannel(EDiscordChannel.ORDER_NOTIFICATION_ROOM,smsMessageDto.getContent());
     }
 
     @Override
@@ -92,8 +92,12 @@ public class OrderFacadeImpl implements IOrderFacade {
             productViewDtoList.add(productViewDto);
         }
 
-
         return OrderDto.toOrderViewDtoByData(orderDto, productViewDtoList);
-
     }
+
+    @Override
+    public List<OrderViewDto> getOrderDetails(String date) {
+        return null;
+    }
+
 }

@@ -5,17 +5,15 @@ import co.kr.demo.global.error.dto.ErrorCode;
 import co.kr.demo.global.error.dto.ErrorResponseDetailDto;
 import co.kr.demo.global.error.dto.ErrorResponseDto;
 import co.kr.demo.global.error.exception.NotFoundException;
+import co.kr.demo.infra.discord.DiscordBot;
+import co.kr.demo.infra.discord.DiscordChannel;
+import co.kr.demo.infra.discord.EDiscordChannel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DefaultMessageCodesResolver;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -29,6 +27,8 @@ import java.util.List;
 public class ExceptionController {
 
 
+    private final static String PACKAGE_NAME = "co.kr.demo";
+    private final DiscordChannel discordChannel;
     /*
      * TO-DO
      * AOP를 통해서 Exception 잡던지, 각 Excpetion 캐치하는 곳에서 쏘는걸 잡던지.. 어쩃든 모니터링이 필요하다.
@@ -36,6 +36,8 @@ public class ExceptionController {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleRunTimeException(RuntimeException ex, NativeWebRequest request) {
+        makeErrorMessageToDiscordChannel(ex);
+
         if (ex instanceof NotFoundException) {
             NotFoundException notFoundException = (NotFoundException) ex;
 
@@ -72,10 +74,31 @@ public class ExceptionController {
             }
         }
 
+        makeErrorMessageToDiscordChannel(ex);
+
         return new ResponseEntity<>(
                 errorResponseDetailDto,
                 HttpStatus.BAD_REQUEST
         );
 
+    }
+
+    private void makeErrorMessageToDiscordChannel(Exception ex) {
+        StringBuilder sb = new StringBuilder();
+        StackTraceElement[] stackTrace = ex.getStackTrace();
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            if (stackTraceElement.toString().startsWith(PACKAGE_NAME)) {
+                sb.append(stackTraceElement);
+                sb.append("\n");
+                sb.append("  ");
+            }
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 1);
+
+
+        String errorMessagePrefix = "[에러발생] \n";
+        String message = errorMessagePrefix + "\n" + "stackTrace = {\n" + "  " + sb.toString() + "}";
+        discordChannel.sendMessageToChannel(EDiscordChannel.SERVER_ERROR, message);
     }
 }
