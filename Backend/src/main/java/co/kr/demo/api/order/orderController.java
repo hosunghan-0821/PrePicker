@@ -1,16 +1,24 @@
 package co.kr.demo.api.order;
 
 
-import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups;
 import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups.OnRegisterOrder;
 import co.kr.demo.service.dto.ResponseDto;
+import co.kr.demo.service.dto.businessDto.SearchConditionDto;
 import co.kr.demo.service.dto.viewDto.OrderViewDto;
 import co.kr.demo.service.order.Interface.IOrderFacade;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +45,21 @@ public class orderController {
         return ResponseEntity.ok(ResponseDto.response(orderDetail));
     }
 
+    @GetMapping("/orders")
+    @ApiOperation(value = "주문 다중조회")
+    public ResponseEntity<ResponseDto<Page<OrderViewDto>>> getOrderList(Pageable pageable,
+                                                                        @RequestParam(value = "startDate", defaultValue = "") String startDate,
+                                                                        @RequestParam(value = "endDate", defaultValue = "") String endDate) {
+
+
+        final SearchConditionDto searchConditionDto = SearchConditionDto.builder()
+                .startDate(SearchConditionDto.toParseInstant(startDate,SearchConditionDto.START_DATE))
+                .endDate(SearchConditionDto.toParseInstant(endDate,SearchConditionDto.END_DATE))
+                .build();
+        final Page<OrderViewDto> orderList = orderFacade.getOrderList(pageable,searchConditionDto);
+        return ResponseEntity.ok(ResponseDto.response(orderList));
+
+    }
     /*
      *   To-DO
      *   주문취소 개발해야함
