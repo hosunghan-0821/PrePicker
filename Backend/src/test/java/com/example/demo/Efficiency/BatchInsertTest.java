@@ -4,7 +4,7 @@ package com.example.demo.Efficiency;
 import co.kr.demo.PrePickerApplication;
 import co.kr.demo.domain.model.Product;
 import co.kr.demo.repository.product.ProductRepository;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
