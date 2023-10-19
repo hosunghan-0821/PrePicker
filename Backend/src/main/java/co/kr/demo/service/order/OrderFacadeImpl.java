@@ -1,11 +1,12 @@
 package co.kr.demo.service.order;
 
-import co.kr.demo.domain.model.Order;
 import co.kr.demo.infra.discord.DiscordBot;
+import co.kr.demo.infra.discord.DiscordChannel;
+import co.kr.demo.infra.discord.EDiscordChannel;
 import co.kr.demo.infra.sms.SMSMessageDto;
 import co.kr.demo.infra.sms.SMSMessageType;
 import co.kr.demo.infra.sms.SMSService;
-import co.kr.demo.repository.order.OrderRepository;
+import co.kr.demo.service.dto.businessDto.SearchConditionDto;
 import co.kr.demo.service.dto.domainDto.*;
 import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import co.kr.demo.service.option.OptionDetailService;
@@ -15,8 +16,13 @@ import co.kr.demo.service.option.OptionService;
 import co.kr.demo.service.order.Interface.IOrderFacade;
 import co.kr.demo.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +44,7 @@ public class OrderFacadeImpl implements IOrderFacade {
 
     private final SMSService smsService;
 
-    private final DiscordBot discordBot;
+    private final DiscordChannel discordChannel;
 
 
     @Override
@@ -71,7 +77,7 @@ public class OrderFacadeImpl implements IOrderFacade {
         smsService.sendMessage(new ArrayList<>(Arrays.asList(smsMessageDto)));
 
         //5 관리자에게 Discord 메세지로 주문안내
-        discordBot.sendMessage("일반",smsMessageDto.getContent());
+        discordChannel.sendMessageToChannel(EDiscordChannel.ORDER_NOTIFICATION_ROOM,smsMessageDto.getContent());
     }
 
     @Override
@@ -80,8 +86,29 @@ public class OrderFacadeImpl implements IOrderFacade {
 
         //기본주문정보
         final OrderDto orderDto = orderService.getOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
-
         //상품정보 + 옵션
+        final List<ProductViewDto> productViewDtoList = getProductViewDto(orderDto);
+
+
+        return OrderDto.toOrderViewDtoByData(orderDto, productViewDtoList);
+    }
+
+    @Override
+    public Page<OrderViewDto> getOrderList(Pageable pageable, SearchConditionDto searchConditionDto) {
+
+        final Page<OrderDto> orderDtoList = orderService.getOrderList(pageable,searchConditionDto);
+        final List<OrderViewDto> orderViewDtoList =new ArrayList<>();
+        for(OrderDto orderDto :orderDtoList.getContent()){
+            final List<ProductViewDto> productViewDtoList = getProductViewDto(orderDto);
+            final OrderViewDto orderViewDto = OrderDto.toOrderViewDtoByData(orderDto, productViewDtoList);
+            orderViewDtoList.add(orderViewDto);
+        }
+        return new PageImpl<>(orderViewDtoList,pageable,orderDtoList.getTotalElements());
+    }
+
+    //상품정보 + 옵션
+    private List<ProductViewDto>  getProductViewDto(OrderDto orderDto){
+
         final List<OrderProductDto> orderProductDtoList = orderProductService.getOrderProduct(orderDto);
 
         List<ProductViewDto> productViewDtoList = new ArrayList<>();
@@ -91,9 +118,7 @@ public class OrderFacadeImpl implements IOrderFacade {
             final ProductViewDto productViewDto = ProductDto.productViewDtoByProductDtoAndOptionViewDto(orderProductDto.getProductDto(), optionDetail);
             productViewDtoList.add(productViewDto);
         }
-
-
-        return OrderDto.toOrderViewDtoByData(orderDto, productViewDtoList);
+        return productViewDtoList;
 
     }
 }

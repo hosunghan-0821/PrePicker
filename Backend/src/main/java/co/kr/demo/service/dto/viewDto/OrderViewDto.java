@@ -42,4 +42,12 @@ public class OrderViewDto {
     @JsonProperty("products")
     public List<ProductViewDto> products;
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder =new StringBuilder();
+        stringBuilder.append("주문번호 : ").append(orderId).append("\n");
+        stringBuilder.append("주문자 성함 : ").append(clientName).append("\n");
+        stringBuilder.append("주문자 번호 : ").append(clientPhoneNum).append("\n");
+        return stringBuilder.toString();
+    }
 }
