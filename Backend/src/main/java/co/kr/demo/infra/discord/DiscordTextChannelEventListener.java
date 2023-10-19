@@ -76,90 +76,34 @@ public class DiscordTextChannelEventListener extends ListenerAdapter {
     }
 
 
-    private void returnMessageToChannel(TextChannel textChannel, String receivedMessage) {
 
-        /*
-         * 주문정보 Return 하는 것 만들기
-         *
-         * */
-
-
-        switch (receivedMessage) {
-
-            case "전체":
-                textChannel.sendMessage("기능 준비중입니다 :)").queue();
-                break;
-            case "날짜검색":
-                receivedMessage = receivedMessage.replace("날짜검색", "");
-                SearchConditionDto.SearchConditionDtoBuilder builder = SearchConditionDto.builder();
-                Page<OrderViewDto> orderViewDtoPage;
-                if (receivedMessage.contains("/")) {
-                    final String[] info = receivedMessage.split("/");
-
-                    SearchConditionDto searchConditionDto = builder
-                            .startDate(SearchConditionDto.toParseInstant(info[0], SearchConditionDto.START_DATE))
-                            .endDate(SearchConditionDto.toParseInstant(info[2], SearchConditionDto.END_DATE))
-                            .build();
-
-                    orderViewDtoPage = orderFacade.getOrderList(PageRequest.of(0, 100), searchConditionDto);
-
-                } else {
-                    SearchConditionDto searchConditionDto = builder.startDate(SearchConditionDto.toParseInstant(receivedMessage, SearchConditionDto.START_DATE))
-                            .endDate(SearchConditionDto.toParseInstant(receivedMessage, SearchConditionDto.END_DATE)).build();
-                    orderViewDtoPage = orderFacade.getOrderList(PageRequest.of(0, 100), searchConditionDto);
-                }
-
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setTitle("주문 조회");
-                orderViewDtoPage.getContent().stream().map(this::makeEmbedMessageField)
-                        .forEach(v -> {
-                                    for (MessageEmbed.Field field : v) {
-                                        embedBuilder.addField(field);
-                                    }
-                                }
-                        );
-                textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-                break;
-            case "사용법":
-                break;
-            default://단건 조회
-                try {
-                    final String[] info = receivedMessage.split("/");
-                    final OrderViewDto orderViewDto = orderFacade.getOrderDetail(OrderViewDto.builder().clientName(info[0]).clientPhoneNum(info[1]).build());
-
-
-                    embedBuilder = new EmbedBuilder();
-                    embedBuilder.setTitle("주문 조회");
-                    List<MessageEmbed.Field> fieldList = makeEmbedMessageField(orderViewDto);
-                    for (MessageEmbed.Field field : fieldList) {
-                        embedBuilder.addField(field);
-                    }
-                    /*
-                     * TO-DO
-                     * 주문 옵션상세 추가로 뿌려줘야함
-                     * */
-                    textChannel.sendMessageEmbeds(embedBuilder.build()).queue();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    textChannel.sendMessage("형식 오류").queue();
-                }
-                break;
-        }
-    }
 
     @Override
     public void onGuildReady(GuildReadyEvent event) {
 
         List<CommandData> commandData = new ArrayList<>();
-        List<OptionData>optionDataList = new ArrayList<>();
+        List<OptionData> searchOrderListOptionList = new ArrayList<>();
+        List<OptionData> getClientOrderOptionList = new ArrayList<>();
 
-        OptionData optionDataStart = new OptionData(OptionType.STRING, "start", "다음 형식으로 보내주세요 ex)2023-07-22",true);
-        OptionData optionDataEnd = new OptionData(OptionType.STRING, "end", "다음 형식으로 보내주세요 ex)2023-07-22",true);
-        optionDataList.add(optionDataStart);
-        optionDataList.add(optionDataEnd);
 
-        commandData.add(Commands.slash("주문목록", "시작날짜,나중날짜를 입력해주세요 ex)2023-02-28 형식주의!").addOptions(optionDataList));
+        OptionData optionDataStart = new OptionData(OptionType.STRING, EDiscordOption.SEARCH_START_DATE.getOptionName(), "다음 형식으로 보내주세요 ex)2023-07-22", true);
+        OptionData optionDataEnd = new OptionData(OptionType.STRING, EDiscordOption.SEARCH_END_DATE.getOptionName(), "다음 형식으로 보내주세요 ex)2023-07-22", true);
+        searchOrderListOptionList.add(optionDataStart);
+        searchOrderListOptionList.add(optionDataEnd);
+
+
+        commandData.add(Commands.slash(EDiscordSlashCommand.ORDER_LIST.getCommandName(), "시작날짜,나중날짜를 입력해주세요 ex)2023-02-28 형식주의!").addOptions(searchOrderListOptionList));
+
+
+        OptionData optionDataClientName = new OptionData(OptionType.STRING, EDiscordOption.CLIENT_NAME.getOptionName(), "주문자 성함을 입력하세요", true);
+        OptionData optionDataClientPhoneNum = new OptionData(OptionType.STRING, EDiscordOption.CLIENT_PHONE_NUM.getOptionName(), "주문자 번호 입력하세요", true);
+
+        getClientOrderOptionList.add(optionDataClientName);
+        getClientOrderOptionList.add(optionDataClientPhoneNum);
+
+        commandData.add(Commands.slash(EDiscordSlashCommand.INDIVIDUAL_ORDER.getCommandName(), "주문자 성함, 전화번호를 입력해주세요").addOptions(getClientOrderOptionList));
+
+
         event.getGuild().updateCommands().addCommands(commandData).queue();
 
     }
@@ -168,9 +112,9 @@ public class DiscordTextChannelEventListener extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         String command = event.getName();
 
-        if (command.equals("주문목록")) {
-            String startDate = event.getOption("start").getAsString();
-            String endDate =event.getOption("end").getAsString();
+        if (command.equals(EDiscordSlashCommand.ORDER_LIST.getCommandName())) {
+            String startDate = event.getOption(EDiscordOption.SEARCH_START_DATE.getOptionName()).getAsString();
+            String endDate = event.getOption(EDiscordOption.SEARCH_END_DATE.getOptionName()).getAsString();
             SearchConditionDto.SearchConditionDtoBuilder builder = SearchConditionDto.builder();
             Page<OrderViewDto> orderViewDtoPage;
 
@@ -192,9 +136,47 @@ public class DiscordTextChannelEventListener extends ListenerAdapter {
                     );
             event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
             event.reply("Your Message was sent!").queue();
+        } else if (command.equals(EDiscordSlashCommand.INDIVIDUAL_ORDER.getCommandName())) {
+
+            String clientPhoneNum = event.getOption(EDiscordOption.CLIENT_PHONE_NUM.getOptionName()).getAsString();
+            String clientName = event.getOption(EDiscordOption.CLIENT_NAME.getOptionName()).getAsString();
+
+            final OrderViewDto orderViewDto = orderFacade.getOrderDetail(OrderViewDto.builder().clientName(clientName).clientPhoneNum(clientPhoneNum).build());
+
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle("주문 조회");
+            List<MessageEmbed.Field> fieldList = makeEmbedMessageField(orderViewDto);
+            for (MessageEmbed.Field field : fieldList) {
+                embedBuilder.addField(field);
+            }
+            /*
+             * TO-DO
+             * 주문 옵션상세 추가로 뿌려줘야함
+             * */
+            event.getChannel().sendMessageEmbeds(embedBuilder.build()).queue();
+            event.reply("Your Message was sent!").queue();
         }
+    }
+
+    private void returnMessageToChannel(TextChannel textChannel, String receivedMessage) {
+
+        /*
+         * 주문정보 Return 하는 것 만들기
+         *
+         * */
 
 
+        switch (receivedMessage) {
+
+            case "전체":
+                textChannel.sendMessage("기능 준비중입니다 :)").queue();
+                break;
+            case "사용법":
+                break;
+            default://단건 조회
+
+                break;
+        }
     }
 
     private List<MessageEmbed.Field> makeEmbedMessageField(OrderViewDto orderViewDto) {
