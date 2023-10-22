@@ -66,7 +66,6 @@ public class OptionDto {
         return Option.builder()
                 .optionName(optionDto.getOptionName())
                 .eOptionType(optionDto.getEOptionType())
-                .additionalData(optionDto.getAdditionalData())
                 .additionalFee(optionDto.getFee())
                 .build();
     }
@@ -76,7 +75,6 @@ public class OptionDto {
                 .optionId(option.getId())
                 .optionName(option.getOptionName())
                 .eOptionType(option.getEOptionType())
-                .additionalData(option.getAdditionalData())
                 .fee(option.getAdditionalFee())
                 .build();
     }

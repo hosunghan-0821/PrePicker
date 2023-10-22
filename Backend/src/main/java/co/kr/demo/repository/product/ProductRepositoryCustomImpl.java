@@ -73,7 +73,6 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         String sql = "INSERT INTO tb_product " +
                 "(product_code,product_name,price,lclassification,mclassification,is_deleted) VALUES (?,?,?,?,?,?)";
 
-
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {

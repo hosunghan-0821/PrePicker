@@ -1,6 +1,8 @@
 package co.kr.demo.domain.model;
 
 
+import co.kr.demo.domain.model.enumeration.EOptionDataType;
+import co.kr.demo.domain.model.enumeration.EOptionType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +21,9 @@ public class OptionData {
     private Long id;
     private String optionDataName;
     private String optionData;
+
+    @Enumerated(EnumType.STRING)
+    private EOptionDataType eOptionDataType;
 
     @JoinColumn(name = "option_id")
     @ManyToOne(fetch = FetchType.LAZY)

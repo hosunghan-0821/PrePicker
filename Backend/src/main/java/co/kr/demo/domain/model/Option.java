@@ -24,14 +24,13 @@ public class Option extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private EOptionType eOptionType;
-    private String additionalData;
 
     private Long additionalFee;
 
     public void updateOption(OptionDto optionDto) {
         this.optionName=optionDto.getOptionName();
-        this.additionalData=optionDto.getAdditionalData();
         this.eOptionType=optionDto.getEOptionType();
         this.additionalFee=optionDto.getFee();
+
     }
 }

@@ -5,10 +5,8 @@ import co.kr.demo.domain.model.Product;
 import co.kr.demo.domain.model.ProductOption;
 import co.kr.demo.global.error.dto.ErrorCode;
 import co.kr.demo.global.error.exception.NotFoundException;
-import co.kr.demo.repository.option.OptionDataRepository;
 import co.kr.demo.repository.option.OptionRepository;
 import co.kr.demo.repository.product.ProductOptionRepository;
-import co.kr.demo.repository.product.ProductRepository;
 import co.kr.demo.service.dto.domainDto.OptionDto;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +39,7 @@ public class OptionService {
         final OptionDto savedOptionDto = OptionDto.of(savedOption);
 
         savedOptionDto.updateOptionData(optionDto.getOptionData());
-        optionDataService.exchangeOptionData(savedOptionDto);
+        optionDataService.savedOptionData(savedOptionDto);
 
     }
 
