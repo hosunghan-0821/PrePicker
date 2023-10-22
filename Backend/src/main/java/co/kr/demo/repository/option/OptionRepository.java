@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface OptionRepository extends JpaRepository<Option,Long> {
+public interface OptionRepository extends JpaRepository<Option,Long>,OptionRepositoryCustom {
 
 }

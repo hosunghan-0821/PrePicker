@@ -13,9 +13,14 @@ import co.kr.demo.service.dto.domainDto.OptionDto;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +32,7 @@ public class OptionService {
     private final OptionRepository optionRepository;
     private final ProductOptionRepository productOptionRepository;
     private final OptionDataService optionDataService;
+
     @Transactional
     public void saveOption(OptionDto optionDto) {
 
@@ -45,13 +51,30 @@ public class OptionService {
     public OptionViewDto getOptionDetail(Long optionId) {
         final Option option = optionRepository.findById(optionId).orElseThrow(NotFoundException::new);
         OptionDto optionDto = OptionDto.of(option);
+        return makeOptionViewDto(optionDto);
+    }
 
+    @Transactional(readOnly = true)
+    public Page<OptionViewDto> getOptionList(Pageable pageable) {
+        final Page<Option> allOptionList = optionRepository.findAllOptionList(pageable);
+        final List<OptionViewDto> optionViewDtoList = new ArrayList<>();
+        for (Option option : allOptionList.getContent()) {
+            OptionDto optionDto = OptionDto.of(option);
+            final OptionViewDto optionViewDto = makeOptionViewDto(optionDto);
+
+            optionViewDtoList.add(optionViewDto);
+        }
+        return new PageImpl<>(optionViewDtoList, pageable, allOptionList.getSize());
+    }
+
+    private OptionViewDto makeOptionViewDto(OptionDto optionDto) {
 
         final OptionViewDto optionViewDto = OptionDto.toOptionViewDtoByOptionDto(optionDto);
         final List<OptionData> optionDataList = optionDataService.getOptionDataList(optionDto);
 
         final List<OptionDataDto> optionDataDtoList = optionDataList.stream().map(OptionDataDto::toOptionDataDto).collect(Collectors.toList());
         optionViewDto.updateOptionDataList(optionDataDtoList);
+
         return optionViewDto;
     }
 
