@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -26,7 +27,8 @@ public abstract class BaseEntity {
     @LastModifiedBy
     private String modifiedBy;
 
-    private boolean isDeleted;
+    @Column(nullable = true)
+    private Boolean isDeleted;
 
 
     @PrePersist

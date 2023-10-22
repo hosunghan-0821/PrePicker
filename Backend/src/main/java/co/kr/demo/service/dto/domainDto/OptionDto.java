@@ -24,8 +24,7 @@ public class OptionDto {
 
     @JsonProperty("type")
     private EOptionType eOptionType;
-    @JsonProperty("additionalData")
-    private String additionalData;
+
     @JsonProperty("OptionData")
     private List<? extends OptionDataDto> optionData;
     @JsonProperty("fee")
@@ -36,7 +35,6 @@ public class OptionDto {
                 .optionId(optionViewDto.getOptionId())
                 .optionName(optionViewDto.getOptionName())
                 .eOptionType(optionViewDto.getEOptionType())
-                .additionalData(optionViewDto.getAdditionalData())
                 .optionData(optionViewDto.getOptionDataList())
                 .fee(optionViewDto.getFee())
                 .build();

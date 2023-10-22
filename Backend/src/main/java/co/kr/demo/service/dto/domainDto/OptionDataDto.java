@@ -38,4 +38,13 @@ public class OptionDataDto {
                 .eOptionDataType(optionDataDto.getOptionDataType())
                 .build();
     }
+
+    public static OptionDataDto toOptionDataDto(OptionData optionData){
+        return OptionDataDto.builder()
+                .optionDataId(optionData.getId())
+                .optionDataName(optionData.getOptionDataName())
+                .optionData(optionData.getOptionData())
+                .optionDataType(optionData.getEOptionDataType())
+                .build();
+    }
 }

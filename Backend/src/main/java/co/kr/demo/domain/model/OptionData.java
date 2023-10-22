@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "tb_option_data")
-public class OptionData {
+public class OptionData extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

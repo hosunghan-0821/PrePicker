@@ -25,30 +25,28 @@ public class OptionViewDto {
 
 
     //Domain :  Option 항목
+    @NotNull(groups = OnCreateProduct.class)
     @NotNull(groups = OnUpdateProduct.class)
     @NotNull(groups = OnRegisterOrder.class)
     @JsonProperty("optionId")
     private Long optionId;
 
-    @NotNull(groups = OnCreateProduct.class)
+
     @NotNull(groups = OnUpdateProduct.class)
     @JsonProperty("name")
     private String optionName;
 
-    @NotNull(groups = OnCreateProduct.class)
+
     @NotNull(groups = OnUpdateProduct.class)
     @NotNull(groups = OnRegisterOrder.class)
     @JsonProperty("type")
     private EOptionType eOptionType;
 
-    @JsonProperty("additionalData")
-    private String additionalData;
 
     @JsonProperty("optionDataList")
-
     private List<OptionDataDto> optionDataList;
 
-    @NotNull(groups = OnCreateProduct.class)
+
     @NotNull(groups = OnUpdateProduct.class)
     @JsonProperty("fee")
     private Long fee;
@@ -61,4 +59,7 @@ public class OptionViewDto {
     private String optionValue;
 
 
+    public void updateOptionDataList(List<OptionDataDto> optionDataDtoList) {
+        this.optionDataList=optionDataDtoList;
+    }
 }

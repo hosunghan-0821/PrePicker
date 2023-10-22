@@ -38,4 +38,9 @@ public class OptionDataService {
 
 
     }
+
+    public List<OptionData> getOptionDataList(OptionDto optionDto) {
+
+        return optionDataRepository.findOptionDataByOptionOrderByIdDesc(Option.builder().id(optionDto.getOptionId()).build());
+    }
 }

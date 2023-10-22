@@ -39,7 +39,7 @@ public class ProductFaceImpl implements IProductFacade {
 
         //2. 상품 관련 Option 등록
         for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
-            optionService.saveOptionWithProduct(OptionDto.toOptionDtoByViewDto(optionViewDto), productDto);
+            optionService.saveProductOption(OptionDto.toOptionDtoByViewDto(optionViewDto), productDto);
         }
         //3. 상품 관련 이미지 등록
         for (ImageViewDto imageViewDto : productViewDto.getImageViewDtoList()) {
@@ -76,7 +76,7 @@ public class ProductFaceImpl implements IProductFacade {
         // 기존에 존재하는 것과 존재하지 않는것 추가
 
         final List<OptionDto> optionDtoList = productViewDto.getOptionDetails().stream().map(OptionDto::toOptionDtoByViewDto).collect(Collectors.toList());
-        optionService.updateOption(productDto,optionDtoList);
+        optionService.updateProductOption(productDto,optionDtoList);
 
 
         //3. 기존 이미지 내용 지우고, 새로운 이미지 추가

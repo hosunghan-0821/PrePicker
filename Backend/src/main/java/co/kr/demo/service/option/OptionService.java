@@ -1,16 +1,20 @@
 package co.kr.demo.service.option;
 
 import co.kr.demo.domain.model.Option;
+import co.kr.demo.domain.model.OptionData;
 import co.kr.demo.domain.model.Product;
 import co.kr.demo.domain.model.ProductOption;
 import co.kr.demo.global.error.dto.ErrorCode;
 import co.kr.demo.global.error.exception.NotFoundException;
 import co.kr.demo.repository.option.OptionRepository;
 import co.kr.demo.repository.product.ProductOptionRepository;
+import co.kr.demo.service.dto.domainDto.OptionDataDto;
 import co.kr.demo.service.dto.domainDto.OptionDto;
 import co.kr.demo.service.dto.domainDto.ProductDto;
+import co.kr.demo.service.dto.viewDto.OptionViewDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -22,18 +26,11 @@ public class OptionService {
 
     private final OptionRepository optionRepository;
     private final ProductOptionRepository productOptionRepository;
-
-
     private final OptionDataService optionDataService;
-
-    public void isExistOption(Long optionId) {
-        optionRepository.findById(optionId)
-                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION));
-    }
-
+    @Transactional
     public void saveOption(OptionDto optionDto) {
 
-        Option option= OptionDto.toOption(optionDto);
+        Option option = OptionDto.toOption(optionDto);
 
         final Option savedOption = optionRepository.save(option);
         final OptionDto savedOptionDto = OptionDto.of(savedOption);
@@ -43,19 +40,45 @@ public class OptionService {
 
     }
 
-    public void saveOptionWithProduct(OptionDto optionDto, ProductDto productDto) {
-        //옵션을 가져와서, prodcutOption에 박아야함...
-        final Option savedOption = optionRepository.save(OptionDto.toOption(optionDto));
+
+    @Transactional(readOnly = true)
+    public OptionViewDto getOptionDetail(Long optionId) {
+        final Option option = optionRepository.findById(optionId).orElseThrow(NotFoundException::new);
+        OptionDto optionDto = OptionDto.of(option);
+
+
+        final OptionViewDto optionViewDto = OptionDto.toOptionViewDtoByOptionDto(optionDto);
+        final List<OptionData> optionDataList = optionDataService.getOptionDataList(optionDto);
+
+        final List<OptionDataDto> optionDataDtoList = optionDataList.stream().map(OptionDataDto::toOptionDataDto).collect(Collectors.toList());
+        optionViewDto.updateOptionDataList(optionDataDtoList);
+        return optionViewDto;
+    }
+
+    public void deleteOption(Long optionId) {
+        final Option option = optionRepository.findById(optionId).orElseThrow(NotFoundException::new);
+        option.softDelete();
+    }
+
+    public void isExistOption(Long optionId) {
+        optionRepository.findById(optionId)
+                .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION));
+    }
+
+
+    public void saveProductOption(OptionDto optionDto, ProductDto productDto) {
+        //존재하는 상품 옵션인지 확인
+        isExistOption(optionDto.getOptionId());
 
         final Product savedProduct = ProductDto.toProduct(productDto);
         final ProductOption productOption = ProductOption.builder()
-                .option(savedOption)
+                .option(Option.builder().id(optionDto.getOptionId()).build())
                 .product(savedProduct)
                 .build();
         productOptionRepository.save(productOption);
     }
 
-    public void updateOption(ProductDto productDto, List<OptionDto> optionDtoList) {
+    public void updateProductOption(ProductDto productDto, List<OptionDto> optionDtoList) {
         final Product savedProduct = Product.builder().id(productDto.getProductId()).build();
         final List<ProductOption> productOptionList = productOptionRepository.findAllByProduct(savedProduct);
         final Map<Long, ProductOption> productOptionMap = productOptionList.stream().collect(Collectors.toMap(
@@ -84,7 +107,7 @@ public class OptionService {
 
     public void matchProductAndOption(OptionDto optionDto, ProductDto productDto) {
         final List<ProductOption> allByProductAndOption = productOptionRepository.findAllByProductAndOption(Product.builder().id(productDto.getProductId()).build(), Option.builder().id(optionDto.getOptionId()).build());
-        if(allByProductAndOption.isEmpty()){
+        if (allByProductAndOption.isEmpty()) {
             throw new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION_PRODUCT_OPTION);
         }
     }
