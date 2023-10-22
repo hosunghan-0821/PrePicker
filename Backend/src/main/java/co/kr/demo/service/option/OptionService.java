@@ -5,6 +5,7 @@ import co.kr.demo.domain.model.Product;
 import co.kr.demo.domain.model.ProductOption;
 import co.kr.demo.global.error.dto.ErrorCode;
 import co.kr.demo.global.error.exception.NotFoundException;
+import co.kr.demo.repository.option.OptionDataRepository;
 import co.kr.demo.repository.option.OptionRepository;
 import co.kr.demo.repository.product.ProductOptionRepository;
 import co.kr.demo.repository.product.ProductRepository;
@@ -22,16 +23,30 @@ import java.util.stream.Collectors;
 public class OptionService {
 
     private final OptionRepository optionRepository;
-
-    private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
+
+
+    private final OptionDataService optionDataService;
 
     public void isExistOption(Long optionId) {
         optionRepository.findById(optionId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION));
     }
 
-    public void saveOption(OptionDto optionDto, ProductDto productDto) {
+    public void saveOption(OptionDto optionDto) {
+
+        Option option= OptionDto.toOption(optionDto);
+
+        final Option savedOption = optionRepository.save(option);
+        final OptionDto savedOptionDto = OptionDto.of(savedOption);
+
+        savedOptionDto.updateOptionData(optionDto.getOptionData());
+        optionDataService.exchangeOptionData(savedOptionDto);
+
+    }
+
+    public void saveOptionWithProduct(OptionDto optionDto, ProductDto productDto) {
+        //옵션을 가져와서, prodcutOption에 박아야함...
         final Option savedOption = optionRepository.save(OptionDto.toOption(optionDto));
 
         final Product savedProduct = ProductDto.toProduct(productDto);
@@ -75,4 +90,6 @@ public class OptionService {
             throw new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION_PRODUCT_OPTION);
         }
     }
+
+
 }

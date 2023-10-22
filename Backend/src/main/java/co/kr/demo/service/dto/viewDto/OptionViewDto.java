@@ -6,10 +6,15 @@ import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups;
 import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups.OnCreateProduct;
 import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups.OnRegisterOrder;
 import co.kr.demo.global.error.validation.ValidationMarkerInterfaceGroups.OnUpdateProduct;
+import co.kr.demo.service.dto.domainDto.OptionDataDto;
+import co.kr.demo.service.dto.domainDto.OptionDto;
+import co.kr.demo.util.serializer.OptionDataDtoDeserializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter(AccessLevel.PROTECTED)
@@ -38,6 +43,10 @@ public class OptionViewDto {
 
     @JsonProperty("additionalData")
     private String additionalData;
+
+    @JsonProperty("optionDataList")
+
+    private List<OptionDataDto> optionDataList;
 
     @NotNull(groups = OnCreateProduct.class)
     @NotNull(groups = OnUpdateProduct.class)

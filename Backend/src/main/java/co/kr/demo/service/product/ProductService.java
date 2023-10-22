@@ -5,7 +5,7 @@ import co.kr.demo.global.error.dto.ErrorCode;
 import co.kr.demo.global.error.exception.NotFoundException;
 import co.kr.demo.repository.product.ProductRepository;
 import co.kr.demo.service.dto.domainDto.ProductDto;
-import co.kr.demo.util.CSVParser;
+import co.kr.demo.util.parser.CSVParser;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

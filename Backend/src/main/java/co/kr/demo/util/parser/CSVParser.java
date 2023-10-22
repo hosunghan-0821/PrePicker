@@ -1,4 +1,4 @@
-package co.kr.demo.util;
+package co.kr.demo.util.parser;
 
 import co.kr.demo.domain.model.Product;
 import co.kr.demo.global.error.dto.ErrorCode;

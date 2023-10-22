@@ -39,7 +39,7 @@ public class ProductFaceImpl implements IProductFacade {
 
         //2. 상품 관련 Option 등록
         for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
-            optionService.saveOption(OptionDto.toOptionDtoByViewDto(optionViewDto), productDto);
+            optionService.saveOptionWithProduct(OptionDto.toOptionDtoByViewDto(optionViewDto), productDto);
         }
         //3. 상품 관련 이미지 등록
         for (ImageViewDto imageViewDto : productViewDto.getImageViewDtoList()) {
