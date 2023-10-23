@@ -37,6 +37,9 @@ public class OrderViewDto {
     @JsonProperty("reservationDate")
     private Instant reservationDate;
 
+    @JsonProperty("price")
+    private Long price;
+
     @Valid
     @NotEmpty
     @JsonProperty("products")
@@ -48,6 +51,7 @@ public class OrderViewDto {
         stringBuilder.append("주문번호 : ").append(orderId).append("\n");
         stringBuilder.append("주문자 성함 : ").append(clientName).append("\n");
         stringBuilder.append("주문자 번호 : ").append(clientPhoneNum).append("\n");
+        stringBuilder.append("총 가격 : ").append(price).append("\n");
         return stringBuilder.toString();
     }
 }

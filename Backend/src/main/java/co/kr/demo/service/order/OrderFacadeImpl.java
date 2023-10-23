@@ -51,7 +51,10 @@ public class OrderFacadeImpl implements IOrderFacade {
     public void registerOrder(OrderViewDto orderViewDto) {
 
         // 1. order 기본 정보 저장
+        // 가격정보 프론트에서 계산해서 넘어오는게 더 빠를수도..
+        // 어차피 프론트에서 계산하기 때문에.. 이중체크용도..?
         final OrderDto savedOrderDto = orderService.saveOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
+        Long totalPrice=0L;
 
         // 2,3 orderProduct 저장 및 optionDetails 저장
         for (ProductViewDto productViewDto : orderViewDto.getProducts()) {
@@ -61,22 +64,30 @@ public class OrderFacadeImpl implements IOrderFacade {
             productService.isExistProduct(productViewDto.getProductId());
 
             final OrderProductDto orderProductDto = orderProductService.saveOrderProduct(savedOrderDto, productDto);
+            totalPrice+=productDto.getProductPrice();
 
             for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
                 final OptionDto optionDto = OptionDto.toOptionDtoByViewDto(optionViewDto);
 
-                optionService.isExistOption(optionViewDto.getOptionId());
+                final OptionDto existOption = optionService.isExistOption(optionViewDto.getOptionId());
                 optionService.matchProductAndOption(optionDto,productDto);
 
+                totalPrice+=existOption.getFee();
                 optionDetailService.saveOptionDetail(optionDto, orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
             }
         }
+        savedOrderDto.updatePrice(totalPrice);
+        //4 전체가격 적용
+        orderService.savePrice(savedOrderDto);
 
-        //4 주문 성공 안내 메세지 발송
+
+        //비동기 처리 필요
+        //5 주문 성공 안내 메세지 발송
         final SMSMessageDto smsMessageDto = smsService.makeSMSMessage(orderViewDto, SMSMessageType.ORDER_CONFIRM);
         smsService.sendMessage(new ArrayList<>(Arrays.asList(smsMessageDto)));
 
-        //5 관리자에게 Discord 메세지로 주문안내
+        //비동기 처리 필요
+        //6 관리자에게 Discord 메세지로 주문안내
         discordChannel.sendMessageToChannel(EDiscordChannel.ORDER_NOTIFICATION_ROOM,smsMessageDto.getContent());
     }
 

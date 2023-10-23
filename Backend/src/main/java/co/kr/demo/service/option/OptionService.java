@@ -83,9 +83,10 @@ public class OptionService {
         option.softDelete();
     }
 
-    public void isExistOption(Long optionId) {
-        optionRepository.findById(optionId)
+    public OptionDto isExistOption(Long optionId) {
+        final Option option = optionRepository.findById(optionId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_EXCEPTION));
+        return OptionDto.of(option);
     }
 
 

@@ -38,13 +38,13 @@ public class OptionViewDto {
 
 
     @NotNull(groups = OnUpdateProduct.class)
-    @NotNull(groups = OnRegisterOrder.class)
     @JsonProperty("type")
     private EOptionType eOptionType;
 
 
     @JsonProperty("optionDataList")
     private List<OptionDataDto> optionDataList;
+
 
 
     @NotNull(groups = OnUpdateProduct.class)

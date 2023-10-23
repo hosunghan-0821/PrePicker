@@ -22,5 +22,9 @@ public class Order extends BaseEntity{
     private String clientPhoneNum;
     private Instant reservationDate;
     private Boolean isReceived;
+    private Long price;
 
+    public void updatePrice(Long price) {
+        this.price=price;
+    }
 }

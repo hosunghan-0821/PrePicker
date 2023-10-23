@@ -1,6 +1,7 @@
 package co.kr.demo.service.order;
 
 import co.kr.demo.domain.model.Order;
+import co.kr.demo.global.error.exception.NotFoundException;
 import co.kr.demo.repository.order.OrderRepository;
 import co.kr.demo.service.dto.businessDto.SearchConditionDto;
 import co.kr.demo.service.dto.domainDto.OrderDto;
@@ -40,5 +41,10 @@ public class OrderService {
         final List<OrderDto> orderDtoList = orderList.getContent().stream().map(OrderDto::of).collect(Collectors.toList());
 
         return new PageImpl<>(orderDtoList,pageable,orderList.getTotalElements());
+    }
+
+    public void savePrice(OrderDto savedOrderDto) {
+        Order order = orderRepository.findById(savedOrderDto.getOrderId()).orElseThrow(NotFoundException::new);
+        order.updatePrice(savedOrderDto.getPrice());
     }
 }

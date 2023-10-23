@@ -29,6 +29,8 @@ public class OrderDto {
     @JsonProperty("reservationDate")
     private Instant reservationDate;
 
+    private Long price;
+
 
     public static Order toOrderByViewDto(OrderViewDto orderViewDto){
         return Order.builder()
@@ -44,6 +46,7 @@ public class OrderDto {
                 .clientName(orderViewDto.getClientName())
                 .clientPhoneNum(orderViewDto.getClientPhoneNum())
                 .reservationDate(orderViewDto.getReservationDate())
+                .price(orderViewDto.getPrice())
                 .build();
     }
 
@@ -63,6 +66,7 @@ public class OrderDto {
                 .clientPhoneNum(savedOrder.getClientPhoneNum())
                 .reservationDate(savedOrder.getReservationDate())
                 .clientName(savedOrder.getClientName())
+                .price(savedOrder.getPrice())
                 .build();
     }
 
@@ -74,6 +78,11 @@ public class OrderDto {
                 .clientName(orderDto.getClientName())
                 .reservationDate(orderDto.getReservationDate())
                 .products(productViewDtoList)
+                .price(orderDto.getPrice())
                 .build();
+    }
+
+    public void updatePrice(Long totalPrice) {
+        this.price=totalPrice;
     }
 }
