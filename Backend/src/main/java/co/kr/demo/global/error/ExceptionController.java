@@ -36,6 +36,7 @@ public class ExceptionController {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleRunTimeException(RuntimeException ex, NativeWebRequest request) {
+        ex.printStackTrace();
         makeErrorMessageToDiscordChannel(ex);
 
         if (ex instanceof NotFoundException) {
