@@ -117,6 +117,12 @@ public class OrderFacadeImpl implements IOrderFacade {
         return new PageImpl<>(orderViewDtoList,pageable,orderDtoList.getTotalElements());
     }
 
+    @Override
+    public Boolean cancelOrder(OrderViewDto orderViewDto) {
+        return orderService.cancelOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
+
+    }
+
     //상품정보 + 옵션
     private List<ProductViewDto>  getProductViewDto(OrderDto orderDto){
 

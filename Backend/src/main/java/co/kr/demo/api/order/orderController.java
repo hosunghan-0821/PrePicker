@@ -53,15 +53,21 @@ public class orderController {
 
 
         final SearchConditionDto searchConditionDto = SearchConditionDto.builder()
-                .startDate(SearchConditionDto.toParseInstant(startDate,SearchConditionDto.START_DATE))
-                .endDate(SearchConditionDto.toParseInstant(endDate,SearchConditionDto.END_DATE))
+                .startDate(SearchConditionDto.toParseInstant(startDate, SearchConditionDto.START_DATE))
+                .endDate(SearchConditionDto.toParseInstant(endDate, SearchConditionDto.END_DATE))
                 .build();
-        final Page<OrderViewDto> orderList = orderFacade.getOrderList(pageable,searchConditionDto);
+        final Page<OrderViewDto> orderList = orderFacade.getOrderList(pageable, searchConditionDto);
         return ResponseEntity.ok(ResponseDto.response(orderList));
 
     }
-    /*
-     *   To-DO
-     *   주문취소 개발해야함
-     * */
+
+    @PostMapping("/orders/cancel")
+    @ApiOperation(value = "주문 취소")
+    public ResponseEntity<Boolean> cancelOrder(@RequestBody OrderViewDto orderViewDto) {
+
+        //Validation 작업 진행 필요
+        final Boolean result = orderFacade.cancelOrder(orderViewDto);
+        return ResponseEntity.ok(result);
+    }
+
 }

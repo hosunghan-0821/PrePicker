@@ -30,7 +30,7 @@ public class OrderService {
 
     public OrderDto getOrder(OrderDto orderDto) {
 
-        final Order savedOrder = orderRepository.findOrderByClientNameAndClientPhoneNum(orderDto.getClientName(), orderDto.getClientPhoneNum())
+        final Order savedOrder = orderRepository.findOrderByClientNameAndClientPhoneNumAndId(orderDto.getClientName(), orderDto.getClientPhoneNum(),orderDto.getOrderId())
                 .orElseThrow(RuntimeException::new);
         return OrderDto.of(savedOrder);
     }
@@ -46,5 +46,12 @@ public class OrderService {
     public void savePrice(OrderDto savedOrderDto) {
         Order order = orderRepository.findById(savedOrderDto.getOrderId()).orElseThrow(NotFoundException::new);
         order.updatePrice(savedOrderDto.getPrice());
+    }
+
+    public Boolean cancelOrder(OrderDto orderDto) {
+        final Order savedOrder = orderRepository.findOrderByClientNameAndClientPhoneNumAndId(orderDto.getClientName(), orderDto.getClientPhoneNum(),orderDto.getOrderId())
+                .orElseThrow(RuntimeException::new);
+        savedOrder.softDelete();
+        return true;
     }
 }

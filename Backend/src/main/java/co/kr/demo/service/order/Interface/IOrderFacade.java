@@ -14,4 +14,6 @@ public interface IOrderFacade {
     OrderViewDto getOrderDetail(OrderViewDto orderDto);
 
     Page<OrderViewDto> getOrderList(Pageable pageable, SearchConditionDto searchConditionDto);
+
+    Boolean cancelOrder(OrderViewDto orderViewDto);
 }
