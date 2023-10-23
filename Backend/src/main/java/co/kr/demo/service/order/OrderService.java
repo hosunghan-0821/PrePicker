@@ -48,10 +48,10 @@ public class OrderService {
         order.updatePrice(savedOrderDto.getPrice());
     }
 
-    public Boolean cancelOrder(OrderDto orderDto) {
+    public OrderDto cancelOrder(OrderDto orderDto) {
         final Order savedOrder = orderRepository.findOrderByClientNameAndClientPhoneNumAndId(orderDto.getClientName(), orderDto.getClientPhoneNum(),orderDto.getOrderId())
                 .orElseThrow(RuntimeException::new);
         savedOrder.softDelete();
-        return true;
+        return OrderDto.of(savedOrder);
     }
 }

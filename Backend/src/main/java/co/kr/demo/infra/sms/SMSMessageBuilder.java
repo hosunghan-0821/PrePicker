@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 public class SMSMessageBuilder {
@@ -19,15 +18,19 @@ public class SMSMessageBuilder {
     private static final String MESSAGE_HEADER_PREFIX = "[파리바게트 다이아몬드 광장점]";
 
     private static final String PRE_PICKING_NOTICE_HEADER= "[사전예약 내역]";
+
+    private static final String PRE_PICKING_CANCEL_HEADER= "[사전예약 취소내역]";
     private static final String ORDER_CUSTOMER_PREFIX = "주문자 성함";
     private static final String ORDER_PHONE_NUM_PREFIX = "주문자 휴대번호";
     private static final String ORDER_RESERVATION_DAY_PREFIX= "픽업일시";
     private static final String ORDER_PRODUCT_PREFIX = "[주문 상품]";
+
+    private static final String CANCEL_PRODUCT_PREFIX = "[예약취소 상품내역]";
     private static final String CHANGE_LINE = "\n";
 
     public static final ZoneId ASIA_SEOUL = ZoneId.of("Asia/Seoul");
 
-    public String makeMessageConfirm(OrderViewDto orderViewDto) {
+    public String makeMessageOrderConfirm(OrderViewDto orderViewDto) {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(MESSAGE_HEADER_PREFIX).append(CHANGE_LINE);
@@ -39,6 +42,22 @@ public class SMSMessageBuilder {
         stringBuilder.append(CHANGE_LINE);
         stringBuilder.append(ORDER_PRODUCT_PREFIX).append(CHANGE_LINE);
         stringBuilder.append(makeProductInfoWithProductInfoList(orderViewDto.getProducts()));
+        stringBuilder.append(CHANGE_LINE);
+        stringBuilder.append(makeMessagePostFix());
+
+        return stringBuilder.toString();
+    }
+    public String makeMessageOrderCancel(OrderViewDto orderViewDto){
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(MESSAGE_HEADER_PREFIX).append(CHANGE_LINE);
+        stringBuilder.append(CHANGE_LINE);
+        stringBuilder.append(PRE_PICKING_CANCEL_HEADER).append(CHANGE_LINE);
+        stringBuilder.append(ORDER_CUSTOMER_PREFIX + ": ").append(orderViewDto.getClientName()).append(CHANGE_LINE);
+        stringBuilder.append(ORDER_PHONE_NUM_PREFIX + ": ").append(makeClientPhoneNumMask(orderViewDto.getClientPhoneNum())).append(CHANGE_LINE);
+
+        //stringBuilder.append(CANCEL_PRODUCT_PREFIX).append(CHANGE_LINE);
+        //stringBuilder.append(makeProductInfoWithProductInfoList(orderViewDto.getProducts()));
         stringBuilder.append(CHANGE_LINE);
         stringBuilder.append(makeMessagePostFix());
 

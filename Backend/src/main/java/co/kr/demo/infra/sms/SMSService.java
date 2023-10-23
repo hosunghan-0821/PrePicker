@@ -78,17 +78,21 @@ public class SMSService {
                     OrderViewDto orderViewDto = (OrderViewDto) data;
                     SMSMessageDto smsMessageDto = new SMSMessageDto();
                     smsMessageDto.setTo(orderViewDto.getClientPhoneNum().replaceAll("-", ""));
-                    smsMessageDto.setContent(smsMessageBuilder.makeMessageConfirm(orderViewDto));
+                    smsMessageDto.setContent(smsMessageBuilder.makeMessageOrderConfirm(orderViewDto));
                     log.info(smsMessageDto.getContent());
                     return smsMessageDto;
                 }
 
                 break;
             case ORDER_CANCEL:
-                /*
-                 * TO-DO
-                 * 주문 취소 문자 메시지 형식 만들어야함
-                 * */
+                if(data instanceof OrderViewDto){
+                    OrderViewDto orderViewDto = (OrderViewDto) data;
+                    SMSMessageDto smsMessageDto = new SMSMessageDto();
+                    smsMessageDto.setTo(orderViewDto.getClientPhoneNum().replaceAll("-", ""));
+                    smsMessageDto.setContent(smsMessageBuilder.makeMessageOrderCancel(orderViewDto));
+                    log.info(smsMessageDto.getContent());
+                    return smsMessageDto;
+                }
                 break;
             default:
                 break;

@@ -82,6 +82,17 @@ public class OrderDto {
                 .build();
     }
 
+    public static OrderViewDto toOrderViewDtoByOrderDto(OrderDto orderDto) {
+
+        return OrderViewDto.builder()
+                .orderId(orderDto.getOrderId())
+                .clientPhoneNum(orderDto.getClientPhoneNum())
+                .clientName(orderDto.getClientName())
+                .reservationDate(orderDto.getReservationDate())
+                .price(orderDto.getPrice())
+                .build();
+    }
+
     public void updatePrice(Long totalPrice) {
         this.price=totalPrice;
     }

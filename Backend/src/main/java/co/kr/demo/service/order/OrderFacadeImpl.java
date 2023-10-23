@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +53,7 @@ public class OrderFacadeImpl implements IOrderFacade {
         // 가격정보 프론트에서 계산해서 넘어오는게 더 빠를수도..
         // 어차피 프론트에서 계산하기 때문에.. 이중체크용도..?
         final OrderDto savedOrderDto = orderService.saveOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
-        Long totalPrice=0L;
+        Long totalPrice = 0L;
 
         // 2,3 orderProduct 저장 및 optionDetails 저장
         for (ProductViewDto productViewDto : orderViewDto.getProducts()) {
@@ -64,15 +63,15 @@ public class OrderFacadeImpl implements IOrderFacade {
             productService.isExistProduct(productViewDto.getProductId());
 
             final OrderProductDto orderProductDto = orderProductService.saveOrderProduct(savedOrderDto, productDto);
-            totalPrice+=productDto.getProductPrice();
+            totalPrice += productDto.getProductPrice();
 
             for (OptionViewDto optionViewDto : productViewDto.getOptionDetails()) {
                 final OptionDto optionDto = OptionDto.toOptionDtoByViewDto(optionViewDto);
 
                 final OptionDto existOption = optionService.isExistOption(optionViewDto.getOptionId());
-                optionService.matchProductAndOption(optionDto,productDto);
+                optionService.matchProductAndOption(optionDto, productDto);
 
-                totalPrice+=existOption.getFee();
+                totalPrice += existOption.getFee();
                 optionDetailService.saveOptionDetail(optionDto, orderProductDto, OptionDetailDto.toOptionDetailDtoByViewDto(optionViewDto));
             }
         }
@@ -88,7 +87,7 @@ public class OrderFacadeImpl implements IOrderFacade {
 
         //비동기 처리 필요
         //6 관리자에게 Discord 메세지로 주문안내
-        discordChannel.sendMessageToChannel(EDiscordChannel.ORDER_NOTIFICATION_ROOM,smsMessageDto.getContent());
+        discordChannel.sendMessageToChannel(EDiscordChannel.ORDER_NOTIFICATION_ROOM, smsMessageDto.getContent());
     }
 
     @Override
@@ -107,24 +106,29 @@ public class OrderFacadeImpl implements IOrderFacade {
     @Override
     public Page<OrderViewDto> getOrderList(Pageable pageable, SearchConditionDto searchConditionDto) {
 
-        final Page<OrderDto> orderDtoList = orderService.getOrderList(pageable,searchConditionDto);
-        final List<OrderViewDto> orderViewDtoList =new ArrayList<>();
-        for(OrderDto orderDto :orderDtoList.getContent()){
+        final Page<OrderDto> orderDtoList = orderService.getOrderList(pageable, searchConditionDto);
+        final List<OrderViewDto> orderViewDtoList = new ArrayList<>();
+        for (OrderDto orderDto : orderDtoList.getContent()) {
             final List<ProductViewDto> productViewDtoList = getProductViewDto(orderDto);
             final OrderViewDto orderViewDto = OrderDto.toOrderViewDtoByData(orderDto, productViewDtoList);
             orderViewDtoList.add(orderViewDto);
         }
-        return new PageImpl<>(orderViewDtoList,pageable,orderDtoList.getTotalElements());
+        return new PageImpl<>(orderViewDtoList, pageable, orderDtoList.getTotalElements());
     }
 
     @Override
     public Boolean cancelOrder(OrderViewDto orderViewDto) {
-        return orderService.cancelOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
+        final OrderDto orderDto = orderService.cancelOrder(OrderDto.toOrderDtoByViewDto(orderViewDto));
 
+        //주문취소 문자 발송
+        final SMSMessageDto smsMessageDto = smsService.makeSMSMessage(OrderDto.toOrderViewDtoByOrderDto(orderDto), SMSMessageType.ORDER_CANCEL);
+        //Discord 알림
+        discordChannel.sendMessageToChannel(EDiscordChannel.ORDER_NOTIFICATION_ROOM, smsMessageDto.getContent());
+        return true;
     }
 
     //상품정보 + 옵션
-    private List<ProductViewDto>  getProductViewDto(OrderDto orderDto){
+    private List<ProductViewDto> getProductViewDto(OrderDto orderDto) {
 
         final List<OrderProductDto> orderProductDtoList = orderProductService.getOrderProduct(orderDto);
 
