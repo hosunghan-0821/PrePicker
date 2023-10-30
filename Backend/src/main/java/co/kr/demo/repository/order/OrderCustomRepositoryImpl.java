@@ -36,7 +36,7 @@ public class OrderCustomRepositoryImpl implements OrderCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize()).fetch();
 
-        int totalElements = jpaQueryFactory.selectFrom(order)
+        int totalElements = jpaQueryFactory.select(order.id).from(order)
                 .where(order.isDeleted.eq(false))
                 .where(getSearchCondition(searchConditionDto))
                 .fetch().size();

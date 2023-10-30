@@ -29,9 +29,8 @@ public class OptionRepositoryCustomImpl implements OptionRepositoryCustom{
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        final int size = jpaQueryFactory.selectFrom(option)
-                .where(option.isDeleted.isFalse()).
-                orderBy(option.id.desc())
+        final int size = jpaQueryFactory.select(option.id).from(option)
+                .where(option.isDeleted.isFalse())
                 .fetch().size();
 
 

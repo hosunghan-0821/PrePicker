@@ -6,6 +6,7 @@ import co.kr.demo.service.dto.domainDto.ImageDto;
 import co.kr.demo.service.dto.domainDto.OptionDto;
 import co.kr.demo.service.dto.domainDto.ProductDto;
 import co.kr.demo.service.dto.viewDto.ProductViewDto;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,8 +43,7 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
                 .fetch();
 
 
-        int totalCounts = jpaQueryFactory.selectFrom(product)
-                .orderBy(product.id.desc()).fetch().size();
+        final int totalCounts = jpaQueryFactory.select(product.id).from(product).fetch().size();
 
         List<ProductDto> productDtoList = productList.stream()
                 .map(ProductDto::of)
