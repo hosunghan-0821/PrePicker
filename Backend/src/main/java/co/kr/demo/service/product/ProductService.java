@@ -9,6 +9,7 @@ import co.kr.demo.util.parser.CSVParser;
 import com.opencsv.CSVReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,8 @@ public class ProductService {
         return productRepository.getProductList(pageable);
     }
 
+
+    @Cacheable(value = "productDetail", key = "#id")
     public ProductDto getProductDetail(Long id) {
         return productRepository.findByIdWithFetch(id);
     }

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest(classes = PrePickerApplication.class)
-@ActiveProfiles("h2test")
 public class BatchInsertTest {
 
     @Autowired
